@@ -3,12 +3,25 @@ defmodule TraceifyWeb.InstanceController do
 
   alias Traceify.Instances
   alias Traceify.Instances.Instance
+  alias Traceify.Instances.LocalLogger
 
   action_fallback TraceifyWeb.FallbackController
 
   def index(conn, _params) do
     instances = Instances.list_instances()
     render(conn, "index.json", instances: instances)
+  end
+
+
+  def log(conn, %{"sitename" => sitename, "level" => level}) do
+
+    try do
+      LocalLogger.log(sitename, level, conn.body_params)
+    rescue
+      e in File.Error -> IO.puts "#{File.Error.message(e)}"
+    end
+
+    render(conn, "log.json")
   end
 
   def create(conn, %{"instance" => instance_params}) do

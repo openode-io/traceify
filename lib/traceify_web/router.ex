@@ -25,6 +25,9 @@ defmodule TraceifyWeb.Router do
 
     scope "/instances"  do
       get "/", InstanceController, :index
+
+      post "/:sitename/:level/log", InstanceController, :log
+      
     end
   end
 end

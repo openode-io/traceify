@@ -6,6 +6,10 @@ defmodule TraceifyWeb.InstanceView do
     %{data: render_many(instances, InstanceView, "instance.json")}
   end
 
+  def render("log.json", %{}) do
+    %{result: "success"}
+  end
+
   def render("show.json", %{instance: instance}) do
     %{data: render_one(instance, InstanceView, "instance.json")}
   end
