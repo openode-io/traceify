@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :traceify, TraceifyWeb.Endpoint,
-  http: [port: 4000],
+  http: [port: System.get_env("HTTP_PORT")],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

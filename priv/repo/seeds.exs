@@ -18,7 +18,7 @@ Repo.query!("delete from services", [])
 Repo.query!("delete from storage_areas", [])
 
 localhost_storage = Repo.insert! %StorageArea{
-    host: "localhost",
+    url: "http://localhost:4002",
     name: "the_writer",
     root_path: "/home/martin/works/dump"
   }

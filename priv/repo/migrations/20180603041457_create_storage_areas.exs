@@ -4,7 +4,7 @@ defmodule Traceify.Repo.Migrations.CreateStorageAreas do
   def change do
     create table(:storage_areas) do
       add :name, :string
-      add :host, :string
+      add :url, :string
       add :root_path, :string
 
       timestamps()

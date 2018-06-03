@@ -11,9 +11,9 @@ defmodule TraceifyWeb.InstanceController do
 
 
   def log(conn, %{"sitename" => sitename, "level" => level}) do
-
     try do
-      DistributedLogger.log(sitename, level, conn.body_params)
+      result = DistributedLogger.log(conn, sitename, level, conn.body_params)
+      IO.puts "result = #{result}"
     rescue
       e in File.Error -> IO.puts "#{File.Error.message(e)}"
     end
