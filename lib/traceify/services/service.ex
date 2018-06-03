@@ -6,7 +6,8 @@ defmodule Traceify.Services.Service do
   schema "services" do
     field :site_name, :string
     field :token, :string
-    field :storage_area_id, :id
+
+    belongs_to :storage_area, Traceify.StorageAreas.StorageArea 
 
     timestamps()
   end

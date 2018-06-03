@@ -5,6 +5,14 @@
 # is restricted to this project.
 use Mix.Config
 
+required_env_variables = ["CURRENT_HOST", "DB_USER", "DB_PASSWORD"]
+
+for var <- required_env_variables do
+  unless System.get_env(var) do
+    raise "No variable #{var} found in config"
+  end
+end
+
 # General application configuration
 config :traceify,
   ecto_repos: [Traceify.Repo]

@@ -12,9 +12,11 @@ defmodule Traceify.Instances.LocalLogger do
     write_to_dir
   end
 
-  def log(sitename, level, content) do
-    write_to_dir = prepare_log_dir(sitename)
-    File.write!("#{write_to_dir}/#{level}.log", "#{inspect(content)}\n", [:append])
+  def log(service, level, content) do
+    # write_to_dir = prepare_log_dir(sitename)
+    # File.write!("#{write_to_dir}/#{level}.log", "#{inspect(content)}\n", [:append])
+    IO.puts "local loggerrr"
+    IO.inspect service
   end
 
 end

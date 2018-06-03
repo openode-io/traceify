@@ -37,6 +37,10 @@ defmodule Traceify.Services do
   """
   def get_service!(id), do: Repo.get!(Service, id)
 
+  def get_service_by_site_name!(name) do
+    Repo.one!(from Service, where: [site_name: ^name], preload: [:storage_area])
+  end
+
   @doc """
   Creates a service.
 
