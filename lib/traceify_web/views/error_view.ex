@@ -6,6 +6,9 @@ defmodule TraceifyWeb.ErrorView do
   # def render("500.html", _assigns) do
   #   "Internal Server Error"
   # end
+  def render("500.json", %{msg: msg}) do
+    %{result: "error", msg: msg}
+  end
 
   # By default, Phoenix returns the status message from
   # the template name. For example, "404.html" becomes
@@ -13,4 +16,5 @@ defmodule TraceifyWeb.ErrorView do
   def template_not_found(template, _assigns) do
     Phoenix.Controller.status_message_from_template(template)
   end
+
 end

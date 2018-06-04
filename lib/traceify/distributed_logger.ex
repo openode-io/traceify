@@ -2,12 +2,17 @@ defmodule Traceify.Instances.DistributedLogger do
 
   alias Traceify.Instances.LocalLogger
   alias Traceify.Instances.RemoteLogger
+  alias Traceify.Instances.LoggerUtil
 
   def log(conn, sitename, level, content) do
 
     url = "#{Atom.to_string(conn.scheme)}://#{conn.host}:#{conn.port}"
-    IO.puts "url = #{url}"
     service = Traceify.Services.get_service_by_site_name!(sitename)
+
+    IO.puts "here1"
+    unless LoggerUtil.token_valid?(conn, service.token) do
+      raise "No valid token provided"
+    end
 
     logger_type = cond do
       service.storage_area.url == url ->

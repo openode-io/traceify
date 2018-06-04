@@ -2,6 +2,7 @@ defmodule TraceifyWeb.InstanceController do
   use TraceifyWeb, :controller
 
   alias Traceify.Instances.DistributedLogger
+  alias TraceifyWeb.InstanceController
 
   action_fallback TraceifyWeb.FallbackController
 
@@ -9,16 +10,25 @@ defmodule TraceifyWeb.InstanceController do
     render(conn, "index.json")
   end
 
+  def handle_error(conn, code, msg) do
+    conn
+    |> put_status(:internal_server_error)
+    |> render(TraceifyWeb.ErrorView, "500.json", %{msg: msg})
+  end
 
   def log(conn, %{"sitename" => sitename, "level" => level}) do
     try do
       result = DistributedLogger.log(conn, sitename, level, conn.body_params)
-      IO.puts "result = #{result}"
-    rescue
-      e in File.Error -> IO.puts "#{File.Error.message(e)}"
-    end
 
-    render(conn, "log.json")
+      cond do
+        result == "success" -> render(conn, "log.json")
+        true -> handle_error(conn, 500, result)
+      end
+
+    rescue
+      e in File.Error -> handle_error(conn, 500, File.Error.message(e))
+      e in RuntimeError -> handle_error(conn, 500, RuntimeError.message(e))
+    end
   end
 
 end

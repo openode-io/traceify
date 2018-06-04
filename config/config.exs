@@ -21,7 +21,7 @@ config :traceify,
 config :traceify, TraceifyWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "BfRwW98jd9jtM3oO+t9NiMSz2u3vyc40RJgDPzBku5lNshwrHbVubfd9AI/RciX+",
-  render_errors: [view: TraceifyWeb.ErrorView, accepts: ~w(html json)],
+  render_errors: [view: TraceifyWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: Traceify.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
