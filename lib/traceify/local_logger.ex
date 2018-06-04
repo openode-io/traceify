@@ -10,7 +10,6 @@ defmodule Traceify.Instances.LocalLogger do
   end
 
   def log(conn, service, level, content) do
-    IO.puts "headers = #{conn.get_headers}"
     t = DateTime.utc_now()
     t_date = DateTime.to_date(t)
     write_to_dir = prepare_log_dir(service, t)

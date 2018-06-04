@@ -9,7 +9,6 @@ defmodule Traceify.Instances.DistributedLogger do
     url = "#{Atom.to_string(conn.scheme)}://#{conn.host}:#{conn.port}"
     service = Traceify.Services.get_service_by_site_name!(sitename)
 
-    IO.puts "here1"
     unless LoggerUtil.token_valid?(conn, service.token) do
       raise "No valid token provided"
     end
