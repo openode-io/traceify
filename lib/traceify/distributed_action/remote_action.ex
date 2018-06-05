@@ -1,14 +1,17 @@
-defmodule Traceify.Instances.RemoteLogger do
+defmodule Traceify.DistributedAction.RemoteAction do
 
 
-  def log(conn, service, level, content) do
+  def action(conn, action, service, level, content) do
     # request
     url = "#{service.storage_area.url}#{conn.request_path}"
 
     header = [{"Accept", "application/json"},
-              {"Content-Type", "application/json"}
+              {"Content-Type", "application/json"},
+              {"x-auth-token", service.token},
              ]
     body = Poison.encode!(content)
+
+    IO.puts "remote action"
 
     case HTTPotion.post(url, [body: body, headers: header]) do
       %HTTPotion.Response{status_code: 200, body: body} ->

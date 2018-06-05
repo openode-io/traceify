@@ -1,4 +1,4 @@
-defmodule Traceify.Instances.LocalLogger do
+defmodule Traceify.DistributedAction.LocalLog do
 
   def prepare_log_dir(service, t) do
     db_root_location = service.storage_area.root_path
@@ -9,7 +9,7 @@ defmodule Traceify.Instances.LocalLogger do
     write_to_dir
   end
 
-  def log(conn, service, level, content) do
+  def log(conn, action, service, level, content) do
     t = DateTime.utc_now()
     t_date = DateTime.to_date(t)
     write_to_dir = prepare_log_dir(service, t)

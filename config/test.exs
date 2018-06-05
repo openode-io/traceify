@@ -12,8 +12,8 @@ config :logger, level: :warn
 # Configure your database
 config :traceify, Traceify.Repo,
   adapter: Ecto.Adapters.MySQL,
-  username: "root",
-  password: "",
+  username: System.get_env("DB_USER"),
+  password: System.get_env("DB_PASSWORD"),
   database: "traceify_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
