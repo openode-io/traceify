@@ -7,11 +7,9 @@ defmodule Traceify.DistributedAction.RemoteAction do
 
     header = [{"Accept", "application/json"},
               {"Content-Type", "application/json"},
-              {"x-auth-token", service.token},
+              {"x-auth-token", service.token}
              ]
     body = Poison.encode!(content)
-
-    IO.puts "remote action"
 
     case HTTPotion.post(url, [body: body, headers: header]) do
       %HTTPotion.Response{status_code: 200, body: body} ->

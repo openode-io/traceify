@@ -16,13 +16,13 @@ defmodule TraceifyWeb.InstanceController do
     |> render(TraceifyWeb.ErrorView, "500.json", %{msg: msg})
   end
 
-  def log(conn, %{"sitename" => sitename, "level" => level}) do
+  defp distributed_action(conn, action, sitename, level, params) do
     try do
-      IO.puts "i log"
-      result = DistributedAction.action(conn, "log", sitename, level, conn.body_params)
+      IO.puts "distribut .. #{action}"
+      result = DistributedAction.action(conn, action, sitename, level, conn.body_params)
 
       cond do
-        result == "success" -> render(conn, "log.json")
+        result == "success" -> render(conn, "#{action}.json")
         true -> handle_error(conn, 500, result)
       end
 
@@ -32,21 +32,12 @@ defmodule TraceifyWeb.InstanceController do
     end
   end
 
+  def log(conn, %{"sitename" => sitename, "level" => level}) do
+    distributed_action(conn, "log", sitename, level, conn.body_params)
+  end
+
   def search(conn, %{"sitename" => sitename, "level" => level}) do
-    try do
-      service = Traceify.Services.get_service_by_site_name!(sitename)
-
-      #cond do
-      #  result == "success" -> render(conn, "log.json")
-      #  true -> handle_error(conn, 500, result)
-      #end
-      IO.puts "coucou"
-
-      render(conn, "log.json")
-    rescue
-      e in File.Error -> handle_error(conn, 500, File.Error.message(e))
-      e in RuntimeError -> handle_error(conn, 500, RuntimeError.message(e))
-    end
+    distributed_action(conn, "search", sitename, level, conn.body_params)
   end
 
 end

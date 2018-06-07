@@ -9,10 +9,17 @@ defmodule Traceify.DistributedAction.LocalLog do
     write_to_dir
   end
 
-  def log(conn, action, service, level, content) do
+  def log(service, level, content) do
+
+    ctbl = "todo" #"CREATE TABLE contacts (contact_id integer PRIMARY KEY, first_name text NOT NULL, last_name text NOT NULL, email text NOT NULL UNIQUE, phone text NOT NULL UNIQUE);"
+
     t = DateTime.utc_now()
     t_date = DateTime.to_date(t)
     write_to_dir = prepare_log_dir(service, t)
+
+    Sqlitex.with_db("#{write_to_dir}/test.sqlite3", fn(db) ->
+      Sqlitex.query(db, ctbl)
+    end)
 
     line_2_log = "#{DateTime.to_string(t)} - [#{level}] - #{inspect(content)}\n"
 
