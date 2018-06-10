@@ -1,6 +1,6 @@
 defmodule Traceify.DistributedAction.LocalLog do
 
-  def prepare_log_dir(service, t) do
+  def prepare_log_dir(service) do
     db_root_location = service.storage_area.root_path
 
     write_to_dir = "#{db_root_location}/#{service.site_name}"
@@ -9,21 +9,35 @@ defmodule Traceify.DistributedAction.LocalLog do
     write_to_dir
   end
 
-  def log(service, level, content) do
 
-    ctbl = "todo" #"CREATE TABLE contacts (contact_id integer PRIMARY KEY, first_name text NOT NULL, last_name text NOT NULL, email text NOT NULL UNIQUE, phone text NOT NULL UNIQUE);"
 
-    t = DateTime.utc_now()
-    t_date = DateTime.to_date(t)
-    write_to_dir = prepare_log_dir(service, t)
+  defp init_db(write_to_dir) do
+    ctbl = """
+      CREATE TABLE IF NOT EXISTS logs (
+        id integer PRIMARY KEY AUTOINCREMENT,
+        level VARCHAR(15) NOT NULL,
+        content TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    """
 
-    Sqlitex.with_db("#{write_to_dir}/test.sqlite3", fn(db) ->
+    Sqlitex.with_db("#{write_to_dir}/db.sqlite3", fn(db) ->
       Sqlitex.query(db, ctbl)
     end)
+  end
 
-    line_2_log = "#{DateTime.to_string(t)} - [#{level}] - #{inspect(content)}\n"
+  def log(service, level, content) do
+    write_to_dir = prepare_log_dir(service)
+    init_db(write_to_dir)
+    IO.puts "content=#{inspect(content)}"
 
-    File.write!("#{write_to_dir}/#{Date.to_string(t_date)}.log", line_2_log, [:append])
+    Sqlitex.with_db("#{write_to_dir}/db.sqlite3", fn(db) ->
+      Sqlitex.query!(
+        db,
+        "INSERT INTO logs (level, content) VALUES ($1, $2)",
+        bind: [level, inspect(content)]
+      )
+    end)
 
     "success"
   end
