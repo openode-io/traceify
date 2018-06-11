@@ -1,7 +1,5 @@
 defmodule Traceify.DistributedAction do
 
-  #alias Traceify.Instances.LocalLogger
-  #alias Traceify.Instances.RemoteLogger
   alias Traceify.DistributedAction.ActionUtil
   alias Traceify.DistributedAction.RemoteAction
 

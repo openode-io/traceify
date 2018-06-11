@@ -1,15 +1,6 @@
 defmodule Traceify.DistributedAction.LocalLog do
 
-  def prepare_log_dir(service) do
-    db_root_location = service.storage_area.root_path
-
-    write_to_dir = "#{db_root_location}/#{service.site_name}"
-    File.mkdir_p!(write_to_dir)
-
-    write_to_dir
-  end
-
-
+  alias Traceify.DistributedAction.ActionUtil
 
   defp init_db(write_to_dir) do
     ctbl = """
@@ -23,13 +14,14 @@ defmodule Traceify.DistributedAction.LocalLog do
 
     Sqlitex.with_db("#{write_to_dir}/db.sqlite3", fn(db) ->
       Sqlitex.query(db, ctbl)
+      Sqlitex.query(db, "CREATE INDEX level_ind ON logs(level)")
+      Sqlitex.query(db, "CREATE INDEX content_ind ON logs(content)")
     end)
   end
 
   def log(service, level, content) do
-    write_to_dir = prepare_log_dir(service)
+    write_to_dir = ActionUtil.prepare_log_dir(service)
     init_db(write_to_dir)
-    IO.puts "content=#{inspect(content)}"
 
     Sqlitex.with_db("#{write_to_dir}/db.sqlite3", fn(db) ->
       Sqlitex.query!(

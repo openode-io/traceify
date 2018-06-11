@@ -10,7 +10,7 @@ defmodule TraceifyWeb.InstanceView do
     %{result: "success"}
   end
 
-  def render("search.json", %{}) do
-    %{result: "success search"}
+  def render("search.json", %{result: result}) do
+    %{result: result}
   end
 end

@@ -18,11 +18,10 @@ defmodule TraceifyWeb.InstanceController do
 
   defp distributed_action(conn, action, sitename, level, params) do
     try do
-      IO.puts "distribut .. #{action}"
       result = DistributedAction.action(conn, action, sitename, level, conn.body_params)
 
       cond do
-        result == "success" -> render(conn, "#{action}.json")
+        ! is_nil(result) -> render(conn, "#{action}.json", %{result: result})
         true -> handle_error(conn, 500, result)
       end
 
