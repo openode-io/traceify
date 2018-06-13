@@ -1,0 +1,6 @@
+- remove token in service
+- context for user, with token, is_admin
+- user has many services - add user_id field
+- pick database for the user model - ENV
+- manage storage areas (with admin user)
+- manage services, with admin user
