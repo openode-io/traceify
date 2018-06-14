@@ -12,8 +12,10 @@
 
 alias Traceify.StorageAreas.StorageArea
 alias Traceify.Services.Service
+alias Traceify.Users.User
 alias Traceify.Repo
 
+Repo.query!("delete from users", [])
 Repo.query!("delete from services", [])
 Repo.query!("delete from storage_areas", [])
 
@@ -23,8 +25,13 @@ localhost_storage = Repo.insert! %StorageArea{
     root_path: "/home/martin/works/dump"
   }
 
+normal_user1 = Repo.insert! %User{
+    token: "my-very-secret-token",
+    is_admin: 0
+  }
+
 service_hello_world = Repo.insert! %Service{
     site_name: "hello_world",
-    token: "my-very-secret-token",
+    user_id: normal_user1.id,
     storage_area_id: localhost_storage.id
   }

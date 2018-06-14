@@ -4,11 +4,10 @@ defmodule Traceify.DistributedAction do
   alias Traceify.DistributedAction.RemoteAction
 
   def action(conn, action, sitename, level, content) do
-
     url = "#{Atom.to_string(conn.scheme)}://#{conn.host}:#{conn.port}"
     service = Traceify.Services.get_service_by_site_name!(sitename)
 
-    unless ActionUtil.token_valid?(conn, service.token) do
+    unless ActionUtil.token_valid?(conn, service.user.token) do
       raise "No valid token provided"
     end
 

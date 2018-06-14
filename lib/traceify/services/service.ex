@@ -5,9 +5,9 @@ defmodule Traceify.Services.Service do
 
   schema "services" do
     field :site_name, :string
-    field :token, :string
 
-    belongs_to :storage_area, Traceify.StorageAreas.StorageArea 
+    belongs_to :storage_area, Traceify.StorageAreas.StorageArea
+    belongs_to :user, Traceify.Users.User
 
     timestamps()
   end
@@ -15,7 +15,7 @@ defmodule Traceify.Services.Service do
   @doc false
   def changeset(service, attrs) do
     service
-    |> cast(attrs, [:site_name, :token])
-    |> validate_required([:site_name, :token])
+    |> cast(attrs, [:site_name])
+    |> validate_required([:site_name])
   end
 end
