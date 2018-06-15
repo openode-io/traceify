@@ -15,7 +15,7 @@ defmodule Traceify.Services.Service do
   @doc false
   def changeset(service, attrs) do
     service
-    |> cast(attrs, [:site_name])
-    |> validate_required([:site_name])
+    |> cast(attrs, [:site_name, :storage_area_id, :user_id])
+    |> validate_required([:site_name, :storage_area_id, :user_id])
   end
 end

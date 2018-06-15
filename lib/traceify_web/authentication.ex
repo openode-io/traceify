@@ -10,15 +10,12 @@ defmodule TraceifyWeb.Authentication do
       true -> raise 'No token available'
     end
 
-    IO.puts "in load user"
     user = Users.get_by_token!(token)
 
     assign(conn, :user, user)
   end
 
   def force_admin(conn, _) do
-    IO.puts "in force admin"
-
     unless conn.assigns.user.is_admin == 1 do
       raise "user should be an admin"
     end

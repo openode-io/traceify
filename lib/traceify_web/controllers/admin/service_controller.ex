@@ -1,4 +1,4 @@
-defmodule TraceifyWeb.Admin.UserController do
+defmodule TraceifyWeb.Admin.ServiceController do
   use TraceifyWeb, :controller
 
   action_fallback TraceifyWeb.FallbackController
@@ -10,9 +10,9 @@ defmodule TraceifyWeb.Admin.UserController do
   end
 
   def create(conn, _) do
-    {:ok, user} = Traceify.Users.create_user conn.body_params
+    {:ok, service} = Traceify.Services.create_service conn.body_params
 
-    render(conn, "create.json", %{user: user})
+    render(conn, "create.json", %{service: service})
   end
 
 end

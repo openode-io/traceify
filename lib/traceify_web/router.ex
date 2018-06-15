@@ -44,6 +44,11 @@ defmodule TraceifyWeb.Router do
         get "/", Admin.UserController, :index
         post "/", Admin.UserController, :create
       end
+
+      scope "/services" do
+        post "/", Admin.ServiceController, :create
+        delete "/", Admin.ServiceController, :delete
+      end
     end
   end
 end

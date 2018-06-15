@@ -15,9 +15,9 @@ defmodule TraceifyWeb.Admin.UserView do
     }
   end
 
-  def render("create.json", %{}) do
+  def render("create.json", %{user: user}) do
     %{
-      result: "success"
+      id: user.id
     }
   end
 end
