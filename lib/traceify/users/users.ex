@@ -37,6 +37,10 @@ defmodule Traceify.Users do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  def get_by_token!(token) do
+    Repo.one!(from User, where: [token: ^token])
+  end
+
   @doc """
   Creates a user.
 

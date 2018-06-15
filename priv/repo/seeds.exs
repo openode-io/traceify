@@ -35,3 +35,8 @@ service_hello_world = Repo.insert! %Service{
     user_id: normal_user1.id,
     storage_area_id: localhost_storage.id
   }
+
+admin1 = Repo.insert! %User{
+    token: "my-very-secret-token-admin",
+    is_admin: 1
+  }

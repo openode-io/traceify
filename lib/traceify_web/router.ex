@@ -1,5 +1,6 @@
 defmodule TraceifyWeb.Router do
   use TraceifyWeb, :router
+  import TraceifyWeb.Authentication
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -11,6 +12,11 @@ defmodule TraceifyWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :load_user
+  end
+
+  pipeline :check_admin do
+    plug :force_admin
   end
 
   scope "/", TraceifyWeb do
@@ -29,6 +35,14 @@ defmodule TraceifyWeb.Router do
       post "/:sitename/:level/log", InstanceController, :log
       post "/:sitename/:level/search", InstanceController, :search
 
+    end
+
+    scope "/admin" do
+      pipe_through :check_admin
+
+      scope "/users" do
+        get "/", Admin.UserController, :index
+      end
     end
   end
 end
