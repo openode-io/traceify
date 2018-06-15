@@ -25,8 +25,6 @@ defmodule Traceify.DistributedAction do
         "action"
     end
 
-    IO.puts "logger type #{logger_type} action mod #{action_module}"
-
     Module.concat(Traceify.DistributedAction, "#{String.capitalize(logger_type)}#{String.capitalize(action_module)}")
       |> apply(String.to_atom(action_module), [service, level, content])
   end

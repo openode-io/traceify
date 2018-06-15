@@ -16,9 +16,6 @@ defmodule TraceifyWeb.Admin.ServiceController do
   end
 
   def destroy(conn, %{"sitename" => sitename}) do
-    IO.puts "destroyy"
-    IO.inspect sitename
-
     # remove from db:
     service = Traceify.Services.get_service_by_site_name!(sitename)
     Traceify.Services.delete_service(service)
