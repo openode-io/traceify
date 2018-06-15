@@ -20,4 +20,10 @@ defmodule TraceifyWeb.Admin.ServiceView do
       id: service.id
     }
   end
+
+  def render("destroy.json", %{service: service}) do
+    %{
+      id: service.id
+    }
+  end
 end

@@ -90,6 +90,9 @@ defmodule Traceify.Services do
 
   """
   def delete_service(%Service{} = service) do
+
+    destroy_db(service)
+
     Repo.delete(service)
   end
 
@@ -104,5 +107,28 @@ defmodule Traceify.Services do
   """
   def change_service(%Service{} = service) do
     Service.changeset(service, %{})
+  end
+
+  def prepare_log_dir(service) do
+    db_root_location = service.storage_area.root_path
+
+    write_to_dir = "#{db_root_location}/#{service.site_name}"
+    File.mkdir_p!(write_to_dir)
+
+    write_to_dir
+  end
+
+  def db_path(service) do
+    write_to_dir = prepare_log_dir(service)
+
+    "#{write_to_dir}/db.sqlite3"
+  end
+
+  def destroy_db(service) do
+    db_path(service)
+      |> File.rm
+
+    prepare_log_dir(service)
+      |> File.rmdir
   end
 end
