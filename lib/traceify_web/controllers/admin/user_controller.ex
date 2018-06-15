@@ -9,6 +9,12 @@ defmodule TraceifyWeb.Admin.UserController do
     render(conn, "index.json", %{users: users})
   end
 
+  def create(conn, _) do
+    users = Traceify.Users.list_users
 
+    {:ok, _} = Traceify.Users.create_user conn.body_params
+
+    render(conn, "create.json", %{})
+  end
 
 end

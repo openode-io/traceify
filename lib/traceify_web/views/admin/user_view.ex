@@ -9,8 +9,15 @@ defmodule TraceifyWeb.Admin.UserView do
   def render("user.json", %{user: user}) do
     %{
       id: user.id,
+      email: user.email,
       inserted_at: user.inserted_at,
       updated_at: user.updated_at
+    }
+  end
+
+  def render("create.json", %{}) do
+    %{
+      result: "success"
     }
   end
 end

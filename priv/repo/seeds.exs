@@ -27,6 +27,7 @@ localhost_storage = Repo.insert! %StorageArea{
 
 normal_user1 = Repo.insert! %User{
     token: "my-very-secret-token",
+    email: "hello@gmail.com",
     is_admin: 0
   }
 
@@ -38,5 +39,6 @@ service_hello_world = Repo.insert! %Service{
 
 admin1 = Repo.insert! %User{
     token: "my-very-secret-token-admin",
+    email: "admin@gmailll.com",
     is_admin: 1
   }

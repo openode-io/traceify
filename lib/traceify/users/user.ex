@@ -6,6 +6,7 @@ defmodule Traceify.Users.User do
   schema "users" do
     field :is_admin, :integer
     field :token, :string
+    field :email, :string
 
     has_many :services, Traceify.Services.Service
 
@@ -15,7 +16,7 @@ defmodule Traceify.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:token, :is_admin])
-    |> validate_required([:token, :is_admin])
+    |> cast(attrs, [:token, :email, :is_admin])
+    |> validate_required([:token, :email, :is_admin])
   end
 end
