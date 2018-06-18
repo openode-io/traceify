@@ -5,6 +5,4 @@ defmodule Traceify.DistributedAction.ActionUtil do
     header_token != nil && elem(header_token, 1) == token
   end
 
-  
-
 end

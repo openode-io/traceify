@@ -1,5 +1,5 @@
 - remove token in service [DONE]
 - context for user, with token, is_admin [DONE]
 - user has many services - add user_id field [DONE]
-- manage storage areas (with admin user)
-- manage services, with admin user
+- manage storage areas (with admin user) [DONE]
+- manage services, with admin user [DONE]
