@@ -11,6 +11,16 @@ defmodule TraceifyWeb.InstanceView do
   end
 
   def render("search.json", %{result: result}) do
-    %{result: result}
+    render_many(result, __MODULE__, "log-entry.json", as: :log)
   end
+
+  def render("log-entry.json", %{log: log}) do
+    %{
+      id: log[:id],
+      level: log[:level],
+      content: log[:content],
+      created_at: log[:created_at]
+    }
+  end
+
 end
