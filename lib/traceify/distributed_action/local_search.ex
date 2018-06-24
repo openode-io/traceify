@@ -9,10 +9,14 @@ defmodule Traceify.DistributedAction.LocalSearch do
     page = content["page"] || 0
     offset = page * limit
 
+    if level == "" do
+      level = "%"
+    end
+
     Sqlitex.with_db(db_path, fn(db) ->
       {:ok, rows} = Sqlitex.query(db,
-        "SELECT * FROM logs WHERE content LIKE ?1 LIMIT ?2 OFFSET ?3 ",
-        bind: ["%#{content["search"]}%", limit, offset]
+        "SELECT * FROM logs WHERE content LIKE ?1 AND level LIKE ?2 LIMIT ?3 OFFSET ?4 ",
+        bind: ["%#{content["search"]}%", level, limit, offset]
       )
 
       rows
