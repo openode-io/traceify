@@ -4,7 +4,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
 
   alias Traceify.DistributedAction.LocalSearch
 
-  describe "LocalSearch > exec_search" do
+  describe "LocalSearch > exec_search - base" do
 
     test "exec_search/3 basic info search" do
       result = LocalSearch.exec_search(
@@ -33,6 +33,9 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       assert length(result) == 15
     end
 
+  end
+
+  describe "LocalSearch > exec_search - pagination" do
     test "exec_search/3 per_page = 2, page = 0" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
@@ -87,7 +90,9 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       assert length(result) == 1
       assert first[:id] == 15
     end
+  end
 
+  describe "LocalSearch > exec_search - level" do
     test "exec_search/3 with type error" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
@@ -96,6 +101,59 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         )
 
       assert length(result) == 7
+    end
+  end
+
+  describe "LocalSearch > exec_search - from - to" do
+    test "exec_search/3 get on 21" do
+      {_, from_dt, _} = DateTime.from_iso8601("2018-06-20 01:47:55+0000")
+      {_, to_dt, _} = DateTime.from_iso8601("2018-06-22 01:47:55+0000")
+
+      result = LocalSearch.exec_search(
+        "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
+        "",
+        %{
+          "search" => "",
+          "from" => from_dt |> DateTime.to_unix,
+          "to" => to_dt |> DateTime.to_unix
+        }
+        )
+
+      assert length(result) == 13
+    end
+
+    test "exec_search/3 get on 18" do
+      {_, from_dt, _} = DateTime.from_iso8601("2018-06-17 01:47:55+0000")
+      {_, to_dt, _} = DateTime.from_iso8601("2018-06-19 01:47:55+0000")
+
+      result = LocalSearch.exec_search(
+        "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
+        "",
+        %{
+          "search" => "",
+          "from" => from_dt |> DateTime.to_unix,
+          "to" => to_dt |> DateTime.to_unix
+        }
+        )
+
+      assert length(result) == 2
+    end
+
+    test "exec_search/3 without result" do
+      {_, from_dt, _} = DateTime.from_iso8601("2018-05-17 01:47:55+0000")
+      {_, to_dt, _} = DateTime.from_iso8601("2018-05-19 01:47:55+0000")
+
+      result = LocalSearch.exec_search(
+        "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
+        "",
+        %{
+          "search" => "",
+          "from" => from_dt |> DateTime.to_unix,
+          "to" => to_dt |> DateTime.to_unix
+        }
+        )
+
+      assert length(result) == 0
     end
   end
 end
