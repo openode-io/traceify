@@ -33,7 +33,7 @@ defmodule TraceifyWeb.Router do
       get "/", InstanceController, :index
 
       post "/:sitename/:level/log", InstanceController, :log
-      post "/:sitename/:level/search", InstanceController, :search
+      post "/:sitename/search", InstanceController, :search
 
     end
 

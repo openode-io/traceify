@@ -17,7 +17,7 @@ defmodule Traceify.DistributedAction.LocalLog do
     end)
   end
 
-  def log(service, level, content) do
+  def log(service, [level], content) do
     init_db(service)
 
     Sqlitex.with_db(Traceify.Services.db_path(service), fn(db) ->

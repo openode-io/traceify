@@ -3,7 +3,7 @@ defmodule Traceify.DistributedAction do
   alias Traceify.DistributedAction.ActionUtil
   alias Traceify.DistributedAction.RemoteAction
 
-  def action(conn, action, sitename, level, content) do
+  def action(conn, action, sitename, levels, content) do
     url = "#{Atom.to_string(conn.scheme)}://#{conn.host}:#{conn.port}"
     service = Traceify.Services.get_service_by_site_name!(sitename)
 
@@ -26,7 +26,7 @@ defmodule Traceify.DistributedAction do
     end
 
     Module.concat(Traceify.DistributedAction, "#{String.capitalize(logger_type)}#{String.capitalize(action_module)}")
-      |> apply(String.to_atom(action_module), [service, level, content])
+      |> apply(String.to_atom(action_module), [service, levels, content])
   end
 
 end

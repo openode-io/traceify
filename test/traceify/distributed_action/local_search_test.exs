@@ -9,7 +9,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
     test "exec_search/3 basic info search" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "info",
+        ["info"],
         %{"search" => "coucou"}
         )
 
@@ -26,7 +26,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
     test "exec_search/3 search empty returns all" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "",
+        [],
         %{"search" => ""}
         )
 
@@ -39,7 +39,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
     test "exec_search/3 per_page = 2, page = 0" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "",
+        [],
         %{"search" => "", "per_page" => 2, "page" => 0}
         )
 
@@ -53,7 +53,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
     test "exec_search/3 per_page = 2, page = 1" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "",
+        [],
         %{"search" => "", "per_page" => 2, "page" => 1}
         )
 
@@ -67,7 +67,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
     test "exec_search/3 per_page = 2, page = 6" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "",
+        [],
         %{"search" => "", "per_page" => 2, "page" => 6}
         )
 
@@ -81,7 +81,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
     test "exec_search/3 per_page = 2, page = 7" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "",
+        [],
         %{"search" => "", "per_page" => 2, "page" => 7}
         )
 
@@ -96,11 +96,21 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
     test "exec_search/3 with type error" do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "error",
+        ["error"],
         %{"search" => ""}
         )
 
       assert length(result) == 7
+    end
+
+    test "exec_search/3 with type error and info" do
+      result = LocalSearch.exec_search(
+        "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
+        ["error", "debug"],
+        %{"search" => ""}
+        )
+
+      assert length(result) == 12
     end
   end
 
@@ -111,7 +121,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
 
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "",
+        [],
         %{
           "search" => "",
           "from" => from_dt |> DateTime.to_unix,
@@ -128,7 +138,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
 
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "",
+        [],
         %{
           "search" => "",
           "from" => from_dt |> DateTime.to_unix,
@@ -145,7 +155,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
 
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
-        "",
+        [],
         %{
           "search" => "",
           "from" => from_dt |> DateTime.to_unix,
