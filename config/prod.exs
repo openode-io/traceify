@@ -15,11 +15,19 @@ use Mix.Config
 # which you typically run after static files are built.
 config :traceify, TraceifyWeb.Endpoint,
   load_from_system_env: true,
-  url: [host: "example.com", port: 80],
+  url: [host: "traceify.openode.io", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
+
+config :traceify, Traceify.Repo,
+  adapter: Ecto.Adapters.MySQL,
+  username: System.get_env("DB_USER"),
+  password: System.get_env("DB_PASSWORD"),
+  database: "traceify_prod",
+  hostname: "localhost",
+  pool_size: 10
 
 # ## SSL Support
 #
