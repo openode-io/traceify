@@ -15,12 +15,16 @@ defmodule TraceifyWeb.Router do
     plug :load_user
   end
 
+  pipeline :api_without_auth do
+    plug :accepts, ["json"]
+  end
+
   pipeline :check_admin do
     plug :force_admin
   end
 
   scope "/", TraceifyWeb do
-    pipe_through :browser # Use the default browser stack
+    pipe_through :api_without_auth
 
     get "/", PageController, :index
   end

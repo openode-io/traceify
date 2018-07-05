@@ -5,7 +5,7 @@
 # is restricted to this project.
 use Mix.Config
 
-required_env_variables = ["CURRENT_HOST", "DB_USER", "DB_PASSWORD", "HTTP_PORT", "HTTPS_PORT"]
+required_env_variables = ["CURRENT_HOST", "DB_USER", "DB_PASSWORD", "DB_HOST", "HTTP_PORT", "HTTPS_PORT"]
 
 for var <- required_env_variables do
   unless System.get_env(var) do

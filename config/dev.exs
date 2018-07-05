@@ -54,5 +54,5 @@ config :traceify, Traceify.Repo,
   username: System.get_env("DB_USER"),
   password: System.get_env("DB_PASSWORD"),
   database: "traceify_dev",
-  hostname: "localhost",
+  hostname: System.get_env("DB_HOST"),
   pool_size: 10
