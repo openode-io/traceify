@@ -19,7 +19,7 @@ ADD . /opt/app
 RUN cd assets/ && \
     npm run deploy && \
     cd - && \
-    source .sample.env && mix do compile, phx.digest
+    source .sample.without.docker.env && mix do compile, phx.digest
 
 
 CMD ["mix", "phx.server"]
