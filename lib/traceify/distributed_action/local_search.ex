@@ -35,6 +35,8 @@ defmodule Traceify.DistributedAction.LocalSearch do
   end
 
   def search(service, level, content) do
+    Traceify.Services.ensure_db(service)
+    
     exec_search(Traceify.Services.db_path(service), level, content)
   end
 

@@ -26,7 +26,8 @@ defmodule TraceifyWeb.Router do
   scope "/", TraceifyWeb do
     pipe_through :api_without_auth
 
-    get "/", PageController, :index
+    get "/", HomeController, :index
+    get "/version", HomeController, :version
   end
 
   # Other scopes may use custom stacks.
