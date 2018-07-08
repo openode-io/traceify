@@ -25,6 +25,12 @@ localhost_storage = Repo.insert! %StorageArea{
     root_path: "/home/martin/works/dump"
   }
 
+Repo.insert! %User{
+    token: "my-very-secret-token-to-delete",
+    email: "hello-to-delete@gmail.com",
+    is_admin: 0
+  }
+
 normal_user1 = Repo.insert! %User{
     token: "my-very-secret-token",
     email: "hello@gmail.com",

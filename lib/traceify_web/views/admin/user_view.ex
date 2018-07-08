@@ -20,4 +20,10 @@ defmodule TraceifyWeb.Admin.UserView do
       id: user.id
     }
   end
+
+  def render("default.json", %{}) do
+    %{
+      result: "success"
+    }
+  end
 end

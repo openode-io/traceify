@@ -41,6 +41,11 @@ defmodule Traceify.Users do
     Repo.one!(from User, where: [token: ^token])
   end
 
+  def get_by_email!(email) do
+    Repo.one!(from User, where: [email: ^email])
+  end
+
+
   @doc """
   Creates a user.
 
