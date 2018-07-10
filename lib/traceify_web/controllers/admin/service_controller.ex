@@ -3,10 +3,10 @@ defmodule TraceifyWeb.Admin.ServiceController do
 
   action_fallback TraceifyWeb.FallbackController
 
-  def index(conn, _params) do
-    users = Traceify.Users.list_users
-
-    render(conn, "index.json", %{users: users})
+  def exists(conn, _) do
+    service = Traceify.Services.get_service_by_site_name!(conn.body_params["site_name"])
+    
+    render(conn, "exists.json", %{service: service})
   end
 
   def create(conn, _) do

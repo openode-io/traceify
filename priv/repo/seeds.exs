@@ -43,6 +43,12 @@ service_hello_world = Repo.insert! %Service{
     storage_area_id: localhost_storage.id
   }
 
+Repo.insert! %Service{
+    site_name: "hello_world_to_delete",
+    user_id: normal_user1.id,
+    storage_area_id: localhost_storage.id
+  }
+
 admin1 = Repo.insert! %User{
     token: "my-very-secret-token-admin",
     email: "admin@gmailll.com",

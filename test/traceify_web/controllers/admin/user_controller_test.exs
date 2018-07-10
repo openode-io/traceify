@@ -20,7 +20,7 @@ defmodule TraceifyWeb.AdminUserControllerTest do
     assert res_obj["id"] >= 1
   end
 
-  test "DELETE /admin/users/", %{conn: conn} do
+  test "DELETE /admin/users/:id", %{conn: conn} do
     user = Traceify.Users.get_by_email!("hello-to-delete@gmail.com")
 
     conn = delete conn, "/api/v1/admin/users/#{user.id}"
