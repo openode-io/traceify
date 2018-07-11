@@ -6,6 +6,13 @@ defmodule TraceifyWeb.Admin.UserView do
     render_many(users, __MODULE__, "user.json", as: :user)
   end
 
+  def render("exists.json", %{user: user}) do
+    %{
+      id: user.id,
+      email: user.email
+    }
+  end
+
   def render("user.json", %{user: user}) do
     %{
       id: user.id,

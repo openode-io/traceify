@@ -17,4 +17,11 @@ defmodule TraceifyWeb.FallbackController do
     |> put_status(:not_found)
     |> render(TraceifyWeb.ErrorView, :"404")
   end
+
+  def call(conn, {:error, _}) do
+    IO.puts "unnnnnn"
+    conn
+    |> put_status(:internal_server_error)
+    |> render(TraceifyWeb.ErrorView, "500.json", %{msg: ""})
+  end
 end

@@ -10,7 +10,7 @@ defmodule TraceifyWeb.InstanceController do
     render(conn, "index.json")
   end
 
-  def handle_error(conn, code, msg) do
+  defp handle_error(conn, code, msg) do
     conn
     |> put_status(:internal_server_error)
     |> render(TraceifyWeb.ErrorView, "500.json", %{msg: msg})
