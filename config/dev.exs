@@ -56,3 +56,15 @@ config :traceify, Traceify.Repo,
   database: "traceify_dev",
   hostname: System.get_env("DB_HOST"),
   pool_size: 10
+
+config :logger,
+  backends: [{LoggerFileBackend, :info},
+             {LoggerFileBackend, :error}]
+
+ config :logger, :info,
+   path: "./logs/info.log",
+   level: :info
+
+ config :logger, :error,
+   path: "./logs/error.log",
+   level: :error

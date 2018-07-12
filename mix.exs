@@ -43,7 +43,8 @@ defmodule Traceify.Mixfile do
       {:httpotion, "~> 3.1.0"},
       {:timex, "~> 3.3"},
       {:cowboy, "~> 1.0"},
-      {:sqlitex, "~> 1.4.1"}
+      {:sqlitex, "~> 1.4.1"},
+      {:logger_file_backend, "~> 0.0.10"}
     ]
   end
 

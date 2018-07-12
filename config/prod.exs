@@ -29,6 +29,18 @@ config :traceify, Traceify.Repo,
   hostname: System.get_env("DB_HOST"),
   pool_size: 10
 
+config :logger,
+  backends: [{LoggerFileBackend, :info},
+             {LoggerFileBackend, :error}]
+
+ config :logger, :info,
+   path: "/var/log/traceify/info.log",
+   level: :info
+
+ config :logger, :error,
+   path: "/var/log/traceify/error.log",
+   level: :error
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
