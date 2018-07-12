@@ -19,7 +19,6 @@ defmodule TraceifyWeb.FallbackController do
   end
 
   def call(conn, {:error, _}) do
-    IO.puts "unnnnnn"
     conn
     |> put_status(:internal_server_error)
     |> render(TraceifyWeb.ErrorView, "500.json", %{msg: ""})

@@ -49,6 +49,7 @@ defmodule TraceifyWeb.Router do
         get "/", Admin.UserController, :index
         post "/", Admin.UserController, :create
         post "/exists", Admin.UserController, :exists
+        patch "/:id", Admin.UserController, :update
         delete "/:id", Admin.UserController, :destroy
       end
 
@@ -56,6 +57,7 @@ defmodule TraceifyWeb.Router do
         get "/", Admin.ServiceController, :index
         post "/", Admin.ServiceController, :create
         post "/exists", Admin.ServiceController, :exists
+        patch "/:id", Admin.ServiceController, :update
         delete "/:sitename/", Admin.ServiceController, :destroy
       end
     end

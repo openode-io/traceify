@@ -46,6 +46,35 @@ defmodule TraceifyWeb.AdminUserControllerTest do
     end
   end
 
+  describe "PATCH /admin/users/:id" do
+    test "existing user", %{conn: conn} do
+
+      user = Traceify.Users.get_by_email!("hello-to-update@gmail.com")
+
+      new_token = "my-very-secret-token-to-update-updated"
+
+      conn = patch conn, "/api/v1/admin/users/#{user.id}", %{
+          token: new_token,
+          is_admin: 1
+        }
+
+      assert String.contains?(conn.resp_body, "success")
+
+      user = Traceify.Users.get_by_email!("hello-to-update@gmail.com")
+      assert user.token == new_token
+      assert user.is_admin == 1
+    end
+
+    test "invalid user", %{conn: conn} do
+      conn = patch conn, "/api/v1/admin/users/-1", %{
+          token: "",
+          is_admin: 1
+        }
+
+      assert conn.status == 500
+    end
+  end
+
   describe "DELETE /admin/users/:id" do
     test "existing user", %{conn: conn} do
       user = Traceify.Users.get_by_email!("hello-to-delete@gmail.com")

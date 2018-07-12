@@ -31,6 +31,12 @@ Repo.insert! %User{
     is_admin: 0
   }
 
+Repo.insert! %User{
+    token: "my-very-secret-token-to-update",
+    email: "hello-to-update@gmail.com",
+    is_admin: 0
+  }
+
 normal_user1 = Repo.insert! %User{
     token: "my-very-secret-token",
     email: "hello@gmail.com",

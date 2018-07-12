@@ -33,6 +33,17 @@ defmodule TraceifyWeb.Admin.UserController do
     end
   end
 
+  def update(conn, %{ "id" => id }) do
+    try do
+      user = Traceify.Users.get_user!(id)
+      {:ok, user} = Traceify.Users.update_user(user, conn.body_params)
+
+      render(conn, "default.json", %{})
+    rescue
+      e in _ -> {:error, :unhandled_error}
+    end
+  end
+
   def destroy(conn, %{ "id" => id }) do
     try do
       user = Traceify.Users.get_user!(id)

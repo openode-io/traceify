@@ -9,7 +9,9 @@ defmodule TraceifyWeb.Admin.UserView do
   def render("exists.json", %{user: user}) do
     %{
       id: user.id,
-      email: user.email
+      email: user.email,
+      token: user.token,
+      is_admin: user.is_admin
     }
   end
 
