@@ -20,7 +20,7 @@ defmodule TraceifyWeb.Admin.ServiceView do
       id: service.id
     }
   end
-  
+
   def render("default.json", %{}) do
     %{
       result: "success"

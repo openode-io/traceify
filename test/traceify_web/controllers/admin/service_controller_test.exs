@@ -32,6 +32,30 @@ defmodule TraceifyWeb.AdminServiceControllerTest do
     end
   end
 
+  describe "PATCH /admin/services/:id" do
+    test "existing service", %{conn: conn} do
+
+      service = Traceify.Services.get_service_by_site_name!("hello_world_to_update")
+
+      new_site_name = "hello_world_to_updated"
+
+      conn = patch conn, "/api/v1/admin/services/#{service.id}", %{
+          site_name: new_site_name
+        }
+
+      assert String.contains?(conn.resp_body, "success")
+
+      service = Traceify.Services.get_service_by_site_name!("hello_world_to_updated")
+      assert service.site_name == new_site_name
+    end
+
+    test "invalid service", %{conn: conn} do
+      conn = patch conn, "/api/v1/admin/services/-1", %{}
+
+      assert conn.status == 500
+    end
+  end
+
   describe "POST /admin/services/exists" do
     test "with existing site", %{conn: conn} do
       last_service = Traceify.Services.list_services

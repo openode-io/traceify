@@ -23,6 +23,17 @@ defmodule TraceifyWeb.Admin.ServiceController do
     end
   end
 
+  def update(conn, %{ "id" => id }) do
+    try do
+      service = Traceify.Services.get_service!(id)
+      {:ok, service} = Traceify.Services.update_service(service, conn.body_params)
+
+      render(conn, "default.json", %{})
+    rescue
+      e in _ -> {:error, :unhandled_error}
+    end
+  end
+
   def destroy(conn, %{"sitename" => sitename}) do
     try do
       # remove from db:
