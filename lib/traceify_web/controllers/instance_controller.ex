@@ -2,7 +2,6 @@ defmodule TraceifyWeb.InstanceController do
   use TraceifyWeb, :controller
 
   alias Traceify.DistributedAction
-  alias TraceifyWeb.InstanceController
 
   action_fallback TraceifyWeb.FallbackController
 
@@ -13,10 +12,10 @@ defmodule TraceifyWeb.InstanceController do
   defp handle_error(conn, code, msg) do
     conn
     |> put_status(:internal_server_error)
-    |> render(TraceifyWeb.ErrorView, "500.json", %{msg: msg})
+    |> render(TraceifyWeb.ErrorView, "#{code}.json", %{msg: msg})
   end
 
-  defp distributed_action(conn, action, sitename, levels, params) do
+  defp distributed_action(conn, action, sitename, levels) do
     try do
       result = DistributedAction.action(conn, action, sitename, levels, conn.body_params)
 
@@ -33,13 +32,13 @@ defmodule TraceifyWeb.InstanceController do
   end
 
   def log(conn, %{"sitename" => sitename, "level" => level}) do
-    distributed_action(conn, "log", sitename, [level], conn.body_params)
+    distributed_action(conn, "log", sitename, [level])
   end
 
   def search(conn, %{"sitename" => sitename}) do
     levels = if conn.body_params["levels"], do: conn.body_params["levels"], else: []
 
-    distributed_action(conn, "search", sitename, levels, conn.body_params)
+    distributed_action(conn, "search", sitename, levels)
   end
 
 end
