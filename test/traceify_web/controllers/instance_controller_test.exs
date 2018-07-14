@@ -13,7 +13,7 @@ defmodule TraceifyWeb.InstanceControllerTest do
 
     setup do
       on_exit fn ->
-        File.rm_rf!("./tmp/dbs/hello_world")
+        # File.rm_rf!("./tmp/dbs/hello_world")
       end
     end
 
@@ -26,6 +26,8 @@ defmodule TraceifyWeb.InstanceControllerTest do
 
       assert String.contains?(conn.resp_body, "success")
 
+      :timer.sleep(1000)
+
       conn_bak = post conn_bak, "/api/v1/instances/hello_world/search", %{
         levels: ["info"]
       }
@@ -33,6 +35,20 @@ defmodule TraceifyWeb.InstanceControllerTest do
       assert String.contains?(conn_bak.resp_body, "created_at")
       assert String.contains?(conn_bak.resp_body, "hello2")
       assert String.contains?(conn_bak.resp_body, "world2")
+    end
+
+    test "concurrent logging", %{conn: conn} do
+      conn_bak = conn
+
+      Enum.each 1..10, fn x ->
+        spawn fn -> post conn, "/api/v1/instances/hello_world/info/log", %{ hello2: "world2" } end
+      end
+
+      Enum.each 1..10, fn x ->
+        spawn fn -> post conn_bak, "/api/v1/instances/hello_world/search", %{ levels: ["info"] }  end
+      end
+
+      :timer.sleep 3000
     end
   end
 end

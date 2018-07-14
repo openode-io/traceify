@@ -20,7 +20,7 @@ defmodule Traceify.Mixfile do
   def application do
     [
       mod: {Traceify.Application, []},
-      extra_applications: [:logger, :runtime_tools, :httpotion]
+      extra_applications: [:logger, :runtime_tools, :httpotion, :exq]
     ]
   end
 
@@ -44,7 +44,8 @@ defmodule Traceify.Mixfile do
       {:timex, "~> 3.3"},
       {:cowboy, "~> 1.0"},
       {:sqlitex, "~> 1.4.1"},
-      {:logger_file_backend, "~> 0.0.10"}
+      {:logger_file_backend, "~> 0.0.10"},
+      {:exq, "~> 0.12.1"}
     ]
   end
 

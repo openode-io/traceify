@@ -21,6 +21,12 @@ config :logger, :error,
  path: "/var/log/traceify/error.log",
  level: :error
 
+config :exq,
+ host: "127.0.0.1",
+ port: 6379,
+ namespace: "exq",
+ concurrency: 1,
+ queues: ["default"]
 
 # Configure your database
 config :traceify, Traceify.Repo,

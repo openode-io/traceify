@@ -29,15 +29,16 @@ defmodule Traceify.DistributedAction.LocalSearch do
         LIMIT ?4 OFFSET ?5 ",
         bind: ["%#{content["search"]}%", from, to, limit, offset]
       )
-
+      
       rows
     end)
   end
 
   def search(service, level, content) do
-    Traceify.Services.ensure_db(service)
+    service_worker = %{"site_name" => service.site_name, "root_path" => service.storage_area.root_path}
+    Traceify.Services.ensure_db(service_worker)
 
-    exec_search(Traceify.Services.db_path(service), level, content)
+    exec_search(Traceify.Services.db_path(service_worker), level, content)
   end
 
 end
