@@ -20,9 +20,9 @@ Repo.query!("delete from services", [])
 Repo.query!("delete from storage_areas", [])
 
 localhost_storage = Repo.insert! %StorageArea{
-    url: "http://localhost:4002",
+    url: "http://www.example.com:80",
     name: "the_writer",
-    root_path: "/home/martin/works/dump"
+    root_path: "./tmp/dbs"
   }
 
 Repo.insert! %User{
@@ -43,7 +43,7 @@ normal_user1 = Repo.insert! %User{
     is_admin: 0
   }
 
-service_hello_world = Repo.insert! %Service{
+Repo.insert! %Service{
     site_name: "hello_world",
     user_id: normal_user1.id,
     storage_area_id: localhost_storage.id
@@ -61,7 +61,7 @@ Repo.insert! %Service{
     storage_area_id: localhost_storage.id
   }
 
-admin1 = Repo.insert! %User{
+Repo.insert! %User{
     token: "my-very-secret-token-admin",
     email: "admin@gmailll.com",
     is_admin: 1

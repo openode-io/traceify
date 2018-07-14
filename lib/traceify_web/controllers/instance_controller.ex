@@ -28,7 +28,7 @@ defmodule TraceifyWeb.InstanceController do
     rescue
       e in File.Error -> handle_error(conn, 500, File.Error.message(e))
       e in RuntimeError -> handle_error(conn, 500, RuntimeError.message(e))
-      e in _ -> handle_error(conn, 500, RuntimeError.message(e))
+      e in _ -> handle_error(conn, 500, e)
     end
   end
 

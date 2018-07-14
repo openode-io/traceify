@@ -12,7 +12,7 @@ defmodule TraceifyWeb.AdminServiceControllerTest do
 
       new_site_name = "siteeeee-#{last_service.id + 1}"
 
-      conn = post conn, "/api/v1/admin/services", %{
+      post conn, "/api/v1/admin/services", %{
           storage_area_id: storage_area.id,
           user_id: user.id,
           site_name: new_site_name
@@ -33,7 +33,7 @@ defmodule TraceifyWeb.AdminServiceControllerTest do
 
       new_site_name = "siteeeee-#{last_service.id + 1}"
 
-      conn = post conn, "/api/v1/admin/services", %{
+      post conn, "/api/v1/admin/services", %{
           user_id: user.id,
           site_name: new_site_name
         }
@@ -104,13 +104,13 @@ defmodule TraceifyWeb.AdminServiceControllerTest do
     test "with existing site", %{conn: conn} do
       service = Traceify.Services.get_service_by_site_name!("hello_world_to_delete")
 
-      conn = delete conn, "/api/v1/admin/services/#{service.site_name}"
+      delete conn, "/api/v1/admin/services/#{service.site_name}"
 
       try do
         Traceify.Services.get_service_by_site_name!("hello_world_to_delete")
         assert false
       rescue
-        e in _ -> assert true
+        _ in _ -> assert true
       end
     end
 
