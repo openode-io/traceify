@@ -14,6 +14,14 @@ config :traceify, TraceifyWeb.Endpoint,
   watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
                     cd: Path.expand("../assets", __DIR__)]]
 
+config :exq,
+ host: "127.0.0.1",
+ port: 6379,
+ namespace: "exq",
+ concurrency: 1,
+ queues: ["default"]
+
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

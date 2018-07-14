@@ -25,13 +25,20 @@ config :logger,
   backends: [{LoggerFileBackend, :info},
              {LoggerFileBackend, :error}]
 
- config :logger, :info,
-   path: "/var/log/traceify/info.log",
-   level: :info
+config :logger, :info,
+ path: "/var/log/traceify/info.log",
+ level: :info
 
- config :logger, :error,
-   path: "/var/log/traceify/error.log",
-   level: :error
+config :logger, :error,
+ path: "/var/log/traceify/error.log",
+ level: :error
+
+config :exq,
+ host: "127.0.0.1",
+ port: 6379,
+ namespace: "exq",
+ concurrency: 1,
+ queues: ["default"]
 
 # ## SSL Support
 #
