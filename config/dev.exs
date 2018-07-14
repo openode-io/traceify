@@ -44,6 +44,8 @@ config :traceify, TraceifyWeb.Endpoint,
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
+
+
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
@@ -56,15 +58,3 @@ config :traceify, Traceify.Repo,
   database: "traceify_dev",
   hostname: System.get_env("DB_HOST"),
   pool_size: 10
-
-config :logger,
-  backends: [{LoggerFileBackend, :info},
-             {LoggerFileBackend, :error}]
-
- config :logger, :info,
-   path: "./logs/info.log",
-   level: :info
-
- config :logger, :error,
-   path: "./logs/error.log",
-   level: :error

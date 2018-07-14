@@ -23,6 +23,27 @@ defmodule TraceifyWeb.AdminServiceControllerTest do
       assert service_created.site_name == new_site_name
     end
 
+    test "create valid service without storage area", %{conn: conn} do
+      user = Traceify.Users.list_users
+        |> Enum.at(0)
+      storage_area = Traceify.StorageAreas.list_storage_areas
+        |> Enum.at(0)
+      last_service = Traceify.Services.list_services
+        |> Enum.at(0)
+
+      new_site_name = "siteeeee-#{last_service.id + 1}"
+
+      conn = post conn, "/api/v1/admin/services", %{
+          user_id: user.id,
+          site_name: new_site_name
+        }
+
+      service_created = Traceify.Services.get_service_by_site_name!(new_site_name)
+
+      assert service_created.site_name == new_site_name
+      assert service_created.storage_area_id == storage_area.id
+    end
+
     test "create invalid service", %{conn: conn} do
       conn = post conn, "/api/v1/admin/services", %{
           whats: "that"

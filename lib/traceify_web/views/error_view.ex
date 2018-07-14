@@ -1,5 +1,6 @@
 defmodule TraceifyWeb.ErrorView do
   use TraceifyWeb, :view
+  require Logger
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
@@ -7,6 +8,8 @@ defmodule TraceifyWeb.ErrorView do
   #   "Internal Server Error"
   # end
   def render("500.json", %{msg: msg}) do
+    Logger.info("500 response")
+    Logger.info(msg)
     %{result: "error", msg: msg}
   end
 

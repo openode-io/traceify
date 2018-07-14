@@ -21,14 +21,6 @@ config :traceify, TraceifyWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
-config :traceify, Traceify.Repo,
-  adapter: Ecto.Adapters.MySQL,
-  username: System.get_env("DB_USER"),
-  password: System.get_env("DB_PASSWORD"),
-  database: "traceify_prod",
-  hostname: System.get_env("DB_HOST"),
-  pool_size: 10
-
 config :logger,
   backends: [{LoggerFileBackend, :info},
              {LoggerFileBackend, :error}]

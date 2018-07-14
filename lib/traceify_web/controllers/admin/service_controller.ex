@@ -1,5 +1,6 @@
 defmodule TraceifyWeb.Admin.ServiceController do
   use TraceifyWeb, :controller
+  require Logger
 
   action_fallback TraceifyWeb.FallbackController
 
@@ -15,7 +16,19 @@ defmodule TraceifyWeb.Admin.ServiceController do
 
   def create(conn, _) do
     try do
-      {:ok, service} = Traceify.Services.create_service conn.body_params
+      Logger.info("creating service")
+
+      service = conn.body_params
+
+      if ! service["storage_area_id"] do
+        storage_area = Traceify.StorageAreas.first_storage_areas
+
+        Logger.info("defaulting to storage area #{storage_area.name}")
+
+        service = Map.put(service, "storage_area_id", storage_area.id)
+      end
+
+      {:ok, service} = Traceify.Services.create_service service
 
       render(conn, "create.json", %{service: service})
     rescue

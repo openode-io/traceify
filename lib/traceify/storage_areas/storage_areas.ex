@@ -21,6 +21,10 @@ defmodule Traceify.StorageAreas do
     Repo.all(StorageArea)
   end
 
+  def first_storage_areas do
+    Repo.one(StorageArea)
+  end
+
   @doc """
   Gets a single storage_area.
 

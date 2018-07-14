@@ -6,8 +6,21 @@ config :traceify, TraceifyWeb.Endpoint,
   http: [port: 4001],
   server: false
 
-# Print only warnings and errors during test
-config :logger, level: :warn
+# Do not print debug messages in production
+config :logger, level: :info
+
+config :logger,
+  backends: [{LoggerFileBackend, :info},
+             {LoggerFileBackend, :error}]
+
+config :logger, :info,
+ path: "/var/log/traceify/info.log",
+ level: :info
+
+config :logger, :error,
+ path: "/var/log/traceify/error.log",
+ level: :error
+
 
 # Configure your database
 config :traceify, Traceify.Repo,
