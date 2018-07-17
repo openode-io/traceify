@@ -130,7 +130,11 @@ defmodule Traceify.Services do
     """
 
     Sqlitex.with_db(Traceify.Services.db_path(service), fn(db) ->
+      # to allow read-write in parallel - https://www.sqlite.org/wal.html
+      Sqlitex.query(db, "PRAGMA journal_mode=WAL;") 
+      
       Sqlitex.query(db, ctbl)
+      
       Sqlitex.query(db, "CREATE INDEX level_ind ON logs(level)")
       Sqlitex.query(db, "CREATE INDEX content_ind ON logs(content)")
     end)

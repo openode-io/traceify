@@ -1,5 +1,60 @@
 defmodule Traceify.DistributedAction.LocalSearch do
 
+  defp do_search_with_results(db_path, opts) do
+    Sqlitex.with_db(db_path, fn(db) ->
+      {:ok, results} = Sqlitex.query(db,
+        "SELECT * FROM logs \
+        WHERE content LIKE ?1 #{opts["level_cond"]} AND \
+        created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch') \
+        LIMIT ?4 OFFSET ?5 ",
+        bind: ["%#{opts["search"]}%", opts["from"], opts["to"], opts["limit"], opts["offset]]
+      )
+    end)
+    
+    results
+  end
+  
+  defp gen_level_cond(levels) do
+    stripped_levels = Enum.map(levels, &(String.replace(&1, ~r/[^a-z0-9-]/, "")))
+
+    cond do
+      stripped_levels == [] -> ""
+      true -> " AND level \
+        IN(#{Enum.map(stripped_levels, &("'#{&1}'")) |> Enum.join(", ")}) "
+    end
+  end
+  
+  defp calculate_total_nb_entries(opts) do
+    Sqlitex.with_db(db_path, fn(db) ->
+      {:ok, resCnt} = Sqlitex.query(db,
+        "SELECT COUNT(*) as cnt FROM logs \
+        WHERE content LIKE ?1 #{opts["level_cond"]} AND \
+        created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch')",
+        bind: ["%#{opts["search"]}%", opts["from"], opts["to"]]
+      )
+    end)
+    
+    resCnt[0]["cnt"]
+  end
+  
+  defp prepare_options(content, level_cond) do
+    limit = content["per_page"] || 30
+    page = content["page"] || 0
+    offset = page * limit
+    from = content["from"] || (Timex.shift(DateTime.utc_now, days: -31) |> DateTime.to_unix)
+    to = content["to"] || (DateTime.utc_now |> DateTime.to_unix)
+    
+    %{
+      "limit" => limit,
+      "page" => page,
+      "offset" => offset,
+      "from" => from,
+      "to" => to,
+      "search" => content["search"],
+      "level_cond" => level_cond
+    }
+  end
+
   # content
   #  - search: keyword
   #  - per_page: number of items per page
@@ -7,31 +62,19 @@ defmodule Traceify.DistributedAction.LocalSearch do
   #  - from: unix timestamp
   #  - to: unix timestamp
   def exec_search(db_path, levels, content) do
-    limit = content["per_page"] || 30
-    page = content["page"] || 0
-    offset = page * limit
-    from = content["from"] || (Timex.shift(DateTime.utc_now, days: -31) |> DateTime.to_unix)
-    to = content["to"] || (DateTime.utc_now |> DateTime.to_unix)
-
-    stripped_levels = Enum.map(levels, &(String.replace(&1, ~r/[^a-z0-9-]/, "")))
-
-    level_cond = cond do
-      stripped_levels == [] -> ""
-      true -> " AND level \
-        IN(#{Enum.map(stripped_levels, &("'#{&1}'")) |> Enum.join(", ")}) "
-    end
-
-    Sqlitex.with_db(db_path, fn(db) ->
-      {:ok, rows} = Sqlitex.query(db,
-        "SELECT * FROM logs \
-        WHERE content LIKE ?1 #{level_cond} AND \
-        created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch') \
-        LIMIT ?4 OFFSET ?5 ",
-        bind: ["%#{content["search"]}%", from, to, limit, offset]
-      )
-      
-      rows
-    end)
+    level_cond = gen_level_cond(levels)
+    opts = prepare_options(content, level_cond)
+    
+    results = do_search_with_results(db_path, opts)
+    total_nb_entries = calculate_total_nb_entries(opts)
+    
+    nb_pages = Float.ceil(total_nb_entries / limit, 2)
+    
+    %{
+      "results" => results,
+      "total_nb_entries" => total_nb_entries,
+      "nb_pages" => nb_pages
+    }
   end
 
   def search(service, level, content) do
