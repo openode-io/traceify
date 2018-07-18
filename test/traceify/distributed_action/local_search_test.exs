@@ -13,7 +13,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => "coucou"}
         )
 
-      [first | [ second | [] ]] = result
+      [first | [ second | [] ]] = result["results"]
 
       assert first[:id] == 1
       assert first[:level] == "info"
@@ -30,7 +30,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => ""}
         )
 
-      assert length(result) == 15
+      assert length(result["results"]) == 15
     end
 
   end
@@ -43,9 +43,9 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => "", "per_page" => 2, "page" => 0}
         )
 
-      [first | [ second | [] ]] = result
+      [first | [ second | [] ]] = result["results"]
 
-      assert length(result) == 2
+      assert length(result["results"]) == 2
       assert first[:id] == 1
       assert second[:id] == 2
     end
@@ -57,9 +57,9 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => "", "per_page" => 2, "page" => 1}
         )
 
-      [first | [ second | [] ]] = result
+      [first | [ second | [] ]] = result["results"]
 
-      assert length(result) == 2
+      assert length(result["results"]) == 2
       assert first[:id] == 3
       assert second[:id] == 4
     end
@@ -71,9 +71,9 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => "", "per_page" => 2, "page" => 6}
         )
 
-      [first | [ second | [] ]] = result
+      [first | [ second | [] ]] = result["results"]
 
-      assert length(result) == 2
+      assert length(result["results"]) == 2
       assert first[:id] == 13
       assert second[:id] == 14
     end
@@ -85,9 +85,9 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => "", "per_page" => 2, "page" => 7}
         )
 
-      [first | [ ]] = result
+      [first | [ ]] = result["results"]
 
-      assert length(result) == 1
+      assert length(result["results"]) == 1
       assert first[:id] == 15
     end
   end
@@ -100,7 +100,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => ""}
         )
 
-      assert length(result) == 7
+      assert length(result["results"]) == 7
     end
 
     test "exec_search/3 with type error and info" do
@@ -110,7 +110,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => ""}
         )
 
-      assert length(result) == 12
+      assert length(result["results"]) == 12
     end
   end
 
@@ -129,7 +129,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         }
         )
 
-      assert length(result) == 13
+      assert length(result["results"]) == 13
     end
 
     test "exec_search/3 get on 18" do
@@ -146,7 +146,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         }
         )
 
-      assert length(result) == 2
+      assert length(result["results"]) == 2
     end
 
     test "exec_search/3 without result" do
@@ -163,7 +163,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         }
         )
 
-      assert length(result) == 0
+      assert length(result["results"]) == 0
     end
   end
 end

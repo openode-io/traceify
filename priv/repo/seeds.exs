@@ -50,6 +50,12 @@ Repo.insert! %Service{
   }
 
 Repo.insert! %Service{
+    site_name: "hello_world_empty",
+    user_id: normal_user1.id,
+    storage_area_id: localhost_storage.id
+  }
+
+Repo.insert! %Service{
     site_name: "hello_world_to_delete",
     user_id: normal_user1.id,
     storage_area_id: localhost_storage.id

@@ -13,7 +13,8 @@ defmodule TraceifyWeb.InstanceControllerTest do
 
     setup do
       on_exit fn ->
-        # File.rm_rf!("./tmp/dbs/hello_world")
+        File.rm_rf!("./tmp/dbs/hello_world")
+        File.rm_rf!("./tmp/dbs/hello_world_empty")
       end
     end
 
@@ -35,6 +36,30 @@ defmodule TraceifyWeb.InstanceControllerTest do
       assert String.contains?(conn_bak.resp_body, "created_at")
       assert String.contains?(conn_bak.resp_body, "hello2")
       assert String.contains?(conn_bak.resp_body, "world2")
+      assert String.contains?(conn_bak.resp_body, "\"total_nb_entries\":1")
+      assert String.contains?(conn_bak.resp_body, "\"nb_pages\":1")
+    end
+
+    @tag :wip
+    test "regular case, multiple logs", %{conn: conn} do
+      conn_bak = conn
+
+      Enum.each 1..12, fn x ->
+        post conn, "/api/v1/instances/hello_world_empty/info/log", %{
+          hello2: "world2"
+        }
+      end
+
+      :timer.sleep(3000)
+
+      conn_bak = post conn_bak, "/api/v1/instances/hello_world_empty/search", %{
+        levels: ["info"],
+        per_page: 10,
+        page: 0
+      }
+
+      assert String.contains?(conn_bak.resp_body, "\"total_nb_entries\":12")
+      assert String.contains?(conn_bak.resp_body, "\"nb_pages\":2")
     end
 
     test "concurrent logging", %{conn: conn} do
