@@ -1,8 +1,6 @@
 defmodule MyLogWorker do
   def stringify_log_content(content) do
-    content_to_log = try do
-      keys =
-
+    try do
       cond do
         length(Map.keys(content)) == 1 && Map.values(content) == [nil] -> Map.keys(content) |> Enum.at(0)
         true -> Poison.encode!(content)
