@@ -4,7 +4,7 @@ defmodule MyLogWorker do
       keys =
 
       cond do
-        length(Map.keys(content)) == 1 && Map.values(content) == [nil] -> Enum.at(Map.keys(content), 0)
+        length(Map.keys(content)) == 1 && Map.values(content) == [nil] -> Map.keys(content) |> Enum.at(0)
         true -> Poison.encode!(content)
       end
     rescue
