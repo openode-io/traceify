@@ -6,7 +6,8 @@ defmodule Traceify.DistributedAction.LocalSearch do
         "SELECT * FROM logs \
         WHERE content LIKE ?1 #{opts["level_cond"]} AND \
         created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch') \
-        LIMIT ?4 OFFSET ?5 ",
+        ORDER BY created_at DESC \
+        LIMIT ?4 OFFSET ?5  ",
         bind: ["%#{opts["search"]}%", opts["from"], opts["to"], opts["limit"], opts["offset"]]
       )
 
