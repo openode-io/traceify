@@ -101,10 +101,13 @@ defmodule TraceifyWeb.AdminServiceControllerTest do
 
 
   describe "DELETE /admin/services/:sitename" do
+    @tag :wip
     test "with existing site", %{conn: conn} do
       service = Traceify.Services.get_service_by_site_name!("hello_world_to_delete")
 
-      delete conn, "/api/v1/admin/services/#{service.site_name}"
+      con_res = delete conn, "/api/v1/admin/services/#{service.site_name}"
+
+      assert con_res.status == 200
 
       try do
         Traceify.Services.get_service_by_site_name!("hello_world_to_delete")

@@ -90,7 +90,6 @@ defmodule Traceify.Services do
 
   """
   def delete_service(%Service{} = service) do
-
     destroy_db(service)
 
     Repo.delete(service)
@@ -131,10 +130,10 @@ defmodule Traceify.Services do
 
     Sqlitex.with_db(Traceify.Services.db_path(service), fn(db) ->
       # to allow read-write in parallel - https://www.sqlite.org/wal.html
-      Sqlitex.query(db, "PRAGMA journal_mode=WAL;") 
-      
+      Sqlitex.query(db, "PRAGMA journal_mode=WAL;")
+
       Sqlitex.query(db, ctbl)
-      
+
       Sqlitex.query(db, "CREATE INDEX level_ind ON logs(level)")
       Sqlitex.query(db, "CREATE INDEX content_ind ON logs(content)")
     end)
@@ -156,10 +155,12 @@ defmodule Traceify.Services do
   end
 
   def destroy_db(service) do
-    db_path(service)
+    service_worker = %{"site_name" => service.site_name, "root_path": service.storage_area.root_path}
+
+    db_path(service_worker)
       |> File.rm
 
-    prepare_log_dir(service)
+    prepare_log_dir(service_worker)
       |> File.rmdir
   end
 end

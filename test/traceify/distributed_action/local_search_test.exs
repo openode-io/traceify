@@ -10,7 +10,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
         ["info"],
-        %{"search" => "coucou"}
+        %{"search" => "coucou", "from" => 0}
         )
 
       [first | [ second | [] ]] = result["results"]
@@ -27,7 +27,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
         [],
-        %{"search" => ""}
+        %{"search" => "", "from" => 0}
         )
 
       assert length(result["results"]) == 15
@@ -40,7 +40,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
         [],
-        %{"search" => "", "per_page" => 2, "page" => 0}
+        %{"search" => "", "per_page" => 2, "page" => 0, "from" => 0}
         )
 
       [first | [ second | [] ]] = result["results"]
@@ -54,7 +54,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
         [],
-        %{"search" => "", "per_page" => 2, "page" => 1}
+        %{"search" => "", "per_page" => 2, "page" => 1, "from" => 0}
         )
 
       [first | [ second | [] ]] = result["results"]
@@ -68,7 +68,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
         [],
-        %{"search" => "", "per_page" => 2, "page" => 6}
+        %{"search" => "", "per_page" => 2, "page" => 6, "from" => 0}
         )
 
       [first | [ second | [] ]] = result["results"]
@@ -82,7 +82,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
         [],
-        %{"search" => "", "per_page" => 2, "page" => 7}
+        %{"search" => "", "per_page" => 2, "page" => 7, "from" => 0}
         )
 
       [first | [ ]] = result["results"]
