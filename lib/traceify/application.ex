@@ -14,6 +14,7 @@ defmodule Traceify.Application do
       supervisor(TraceifyWeb.Endpoint, []),
       # Start your own worker by calling: Traceify.Worker.start_link(arg1, arg2, arg3)
       # worker(Traceify.Worker, [arg1, arg2, arg3]),
+      supervisor(Traceify.RedixPool, [])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -23,6 +23,10 @@ defmodule TraceifyWeb do
       import Plug.Conn
       import TraceifyWeb.Router.Helpers
       import TraceifyWeb.Gettext
+      import Redix
+      import Logger
+
+      alias Traceify.RedixPool, as: Redis
     end
   end
 

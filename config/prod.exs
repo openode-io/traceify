@@ -33,13 +33,6 @@ config :logger, :error,
  path: "/var/log/traceify/error.log",
  level: :error
 
-config :exq,
- host: "127.0.0.1",
- port: 6379,
- namespace: "exq",
- concurrency: 1,
- queues: ["default"]
-
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

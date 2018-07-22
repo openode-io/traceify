@@ -4,7 +4,7 @@ defmodule Traceify.Mixfile do
   def project do
     [
       app: :traceify,
-      version: "0.0.4",
+      version: "0.0.5",
       elixir: "~> 1.4",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
@@ -20,7 +20,7 @@ defmodule Traceify.Mixfile do
   def application do
     [
       mod: {Traceify.Application, []},
-      extra_applications: [:logger, :runtime_tools, :httpotion, :exq]
+      extra_applications: [:logger, :runtime_tools, :httpotion]
     ]
   end
 
@@ -45,7 +45,7 @@ defmodule Traceify.Mixfile do
       {:cowboy, "~> 1.0"},
       {:sqlitex, "~> 1.4.1"},
       {:logger_file_backend, "~> 0.0.10"},
-      {:exq, "~> 0.12.1"}
+      {:redix, "~> 0.7.1"}
     ]
   end
 

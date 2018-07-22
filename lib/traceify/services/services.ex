@@ -140,9 +140,9 @@ defmodule Traceify.Services do
   end
 
   def prepare_log_dir(service) do
-    db_root_location = service["root_path"] #.storage_area.root_path
+    db_root_location = service.storage_area.root_path
 
-    write_to_dir = "#{db_root_location}/#{service["site_name"]}"
+    write_to_dir = "#{db_root_location}/#{service.site_name}"
     File.mkdir_p(write_to_dir)
 
     write_to_dir
@@ -155,12 +155,10 @@ defmodule Traceify.Services do
   end
 
   def destroy_db(service) do
-    service_worker = %{"site_name" => service.site_name, "root_path": service.storage_area.root_path}
-
-    db_path(service_worker)
+    db_path(service)
       |> File.rm
 
-    prepare_log_dir(service_worker)
+    prepare_log_dir(service)
       |> File.rmdir
   end
 end
