@@ -9,5 +9,9 @@ npm run deploy && \
     cd - && \
     source .sample.without.docker.env && mix do compile, phx.digest
 
+# crontab !!!
+echo "setting up the crontab"
+echo '* * * * * sh /opt/app/scripts/crunch.sh' >> /etc/crontabs/root
+
 # serve
 mix phx.server

@@ -7,7 +7,4 @@ ENV PORT=5000 MIX_ENV=prod
 # main build and run script
 ADD build-and-run.sh ./
 
-# crontab
-RUN echo '* * * * * sh /opt/app/scripts/crunch.sh' >> /etc/crontabs/root
-
 CMD ["mix", "phx.server"]
