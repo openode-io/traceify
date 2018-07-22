@@ -66,7 +66,6 @@ defmodule Traceify.DistributedAction.LocalSearch do
   def exec_search(db_path, levels, content) do
     level_cond = gen_level_cond(levels)
     opts = prepare_options(content, level_cond)
-
     results = do_search_with_results(db_path, opts)
     total_nb_entries = calculate_total_nb_entries(db_path, opts)
     nb_pages = Kernel.trunc(Float.ceil(total_nb_entries / opts["limit"]))
@@ -79,10 +78,9 @@ defmodule Traceify.DistributedAction.LocalSearch do
   end
 
   def search(service, level, content) do
-    service_worker = %{"site_name" => service.site_name, "root_path" => service.storage_area.root_path}
-    Traceify.Services.ensure_db(service_worker)
+    Traceify.Services.ensure_db(service)
 
-    exec_search(Traceify.Services.db_path(service_worker), level, content)
+    exec_search(Traceify.Services.db_path(service), level, content)
   end
 
 end

@@ -1,5 +1,6 @@
 defmodule TraceifyWeb.InstanceControllerTest do
   use TraceifyWeb.NormalUserConnCase
+  alias Traceify.RedixPool, as: Redis
 
   describe "GET /api/v1/instances/" do
     test "regular case", %{conn: conn} do
@@ -18,6 +19,17 @@ defmodule TraceifyWeb.InstanceControllerTest do
       end
     end
 
+    test "regular search", %{conn: conn} do
+      conn = post conn, "/api/v1/instances/hello_world/search", %{
+        levels: ["info"],
+        from: 0
+      }
+
+      assert String.contains?(conn.resp_body, "total_nb_entries")
+      assert String.contains?(conn.resp_body, "results")
+      assert String.contains?(conn.resp_body, "nb_pages")
+    end
+
     test "regular case, single level", %{conn: conn} do
       conn_bak = conn
 
@@ -26,21 +38,8 @@ defmodule TraceifyWeb.InstanceControllerTest do
       }
 
       assert String.contains?(conn.resp_body, "success")
-
-      :timer.sleep(1000)
-
-      conn_bak = post conn_bak, "/api/v1/instances/hello_world/search", %{
-        levels: ["info"]
-      }
-
-      assert String.contains?(conn_bak.resp_body, "created_at")
-      assert String.contains?(conn_bak.resp_body, "hello2")
-      assert String.contains?(conn_bak.resp_body, "world2")
-      assert String.contains?(conn_bak.resp_body, "\"total_nb_entries\":1")
-      assert String.contains?(conn_bak.resp_body, "\"nb_pages\":1")
     end
 
-    @tag :wip
     test "regular case, multiple logs", %{conn: conn} do
       conn_bak = conn
 
@@ -49,17 +48,6 @@ defmodule TraceifyWeb.InstanceControllerTest do
           hello2: "world2"
         }
       end
-
-      :timer.sleep(3000)
-
-      conn_bak = post conn_bak, "/api/v1/instances/hello_world_empty/search", %{
-        levels: ["info"],
-        per_page: 10,
-        page: 0
-      }
-
-      assert String.contains?(conn_bak.resp_body, "\"total_nb_entries\":12")
-      assert String.contains?(conn_bak.resp_body, "\"nb_pages\":2")
     end
 
     test "concurrent logging", %{conn: conn} do

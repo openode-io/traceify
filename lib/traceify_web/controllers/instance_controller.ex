@@ -2,6 +2,7 @@ defmodule TraceifyWeb.InstanceController do
   use TraceifyWeb, :controller
 
   alias Traceify.DistributedAction
+  import Logger
 
   action_fallback TraceifyWeb.FallbackController
 
@@ -10,8 +11,9 @@ defmodule TraceifyWeb.InstanceController do
   end
 
   defp handle_error(conn, code, msg) do
-    IO.puts "handlle"
+    Logger.error("handle error")
     IO.inspect msg
+
     conn
     |> put_status(:internal_server_error)
     |> render(TraceifyWeb.ErrorView, "#{code}.json", %{msg: msg})

@@ -97,7 +97,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
         ["error"],
-        %{"search" => ""}
+        %{"search" => "", "from" => 0}
         )
 
       assert length(result["results"]) == 7
@@ -107,9 +107,9 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
       result = LocalSearch.exec_search(
         "test/traceify/distributed_action/fixtures/db_basic_logs.sqlite3",
         ["error", "debug"],
-        %{"search" => ""}
+        %{"search" => "", "from" => 0}
         )
-
+        
       assert length(result["results"]) == 12
     end
   end
