@@ -45,7 +45,8 @@ defmodule Traceify.Mixfile do
       {:cowboy, "~> 1.0"},
       {:sqlitex, "~> 1.4.1"},
       {:logger_file_backend, "~> 0.0.10"},
-      {:redix, "~> 0.7.1"}
+      {:redix, "~> 0.7.1"},
+      {:quantum, "~> 2.2"}
     ]
   end
 
