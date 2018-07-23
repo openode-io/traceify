@@ -3,6 +3,7 @@ defmodule Traceify.MyLogWorker do
 
   def pending_logs_delimiter, do: "="
   def prefix_pending_logs, do: "traceify#{pending_logs_delimiter}"
+  import Logger
 
   def stringify_log_content(content) do
     try do
@@ -20,13 +21,16 @@ defmodule Traceify.MyLogWorker do
 
     Sqlitex.with_db(Traceify.Services.db_path(service), fn(db) ->
       Enum.each(logs, fn(log) ->
-        IO.puts "logging"
-        IO.inspect log
-        Sqlitex.query!(
-          db,
-          "INSERT INTO logs (level, content) VALUES ($1, $2)",
-          bind: [log["level"], stringify_log_content(log["content"])]
-        )
+        try do
+          Sqlitex.query!(
+            db,
+            "INSERT INTO logs (level, content) VALUES ($1, $2)",
+            bind: [log["level"], log["content"]]
+          )
+        rescue
+          e in _ -> Logger.error("could not perform log properly")
+        end
+
         Redis.command(["DEL", log["key"]])
       end)
     end)
@@ -37,8 +41,8 @@ defmodule Traceify.MyLogWorker do
   def log(service, level, content) do
     ts = DateTime.utc_now |> DateTime.to_unix
     key_name = "traceify=#{service.site_name}=#{level}=#{ts}_#{:rand.uniform(1000000)}"
-
-    Redis.command(["SET", "#{key_name}", stringify_log_content(content)])
+    IO.puts "logssssggfjk"
+    Redis.command(["SET", "#{key_name}", Traceify.MyLogWorker.stringify_log_content(content)])
   end
 end
 
