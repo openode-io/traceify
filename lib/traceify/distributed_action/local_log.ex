@@ -41,7 +41,7 @@ defmodule Traceify.MyLogWorker do
   def log(service, level, content) do
     ts = DateTime.utc_now |> DateTime.to_unix
     key_name = "traceify=#{service.site_name}=#{level}=#{ts}_#{:rand.uniform(1000000)}"
-    IO.puts "logssssggfjk"
+    
     Redis.command(["SET", "#{key_name}", Traceify.MyLogWorker.stringify_log_content(content)])
   end
 end
