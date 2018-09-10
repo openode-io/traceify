@@ -16,23 +16,41 @@ defmodule Traceify.MyLogWorker do
     end
   end
 
+  defp remove_old_records(db, max_days_retentions) do
+    Sqlitex.query!(
+      db,
+      "DELETE FROM logs WHERE created_at < datetime('now', '-$1 days')",
+      bind: [max_days_retentions]
+    )
+  end
+
+  defp insert_log(db, level, content) do
+    Sqlitex.query!(
+      db,
+      "INSERT INTO logs (level, content) VALUES ($1, $2)",
+      bind: [level, content]
+    )
+  end
+
+  defp remove_tmp_log(key) do
+    Redis.command(["DEL", key])
+  end
+
   def perform(service, logs) do
     Traceify.Services.ensure_db(service)
 
     Sqlitex.with_db(Traceify.Services.db_path(service), fn(db) ->
-      Enum.each(logs, fn(log) ->
-        try do
-          Sqlitex.query!(
-            db,
-            "INSERT INTO logs (level, content) VALUES ($1, $2)",
-            bind: [log["level"], log["content"]]
-          )
-        rescue
-          e in _ -> Logger.error("could not perform log properly")
-        end
+      try do
+        remove_old_records(db, System.get_env("MAX_DAYS_RETENTION") || 31)
 
-        Redis.command(["DEL", log["key"]])
-      end)
+        Enum.each(logs, fn(log) ->
+          insert_log(db, log["level"], log["content"])
+
+          remove_tmp_log(log["key"])
+        end)
+      rescue
+        e in _ -> Logger.error("could not perform log properly")
+      end
     end)
 
     "success"
@@ -41,7 +59,7 @@ defmodule Traceify.MyLogWorker do
   def log(service, level, content) do
     ts = DateTime.utc_now |> DateTime.to_unix
     key_name = "traceify=#{service.site_name}=#{level}=#{ts}_#{:rand.uniform(1000000)}"
-    
+
     Redis.command(["SET", "#{key_name}", Traceify.MyLogWorker.stringify_log_content(content)])
   end
 end
