@@ -3,6 +3,17 @@ defmodule Traceify.Task.CrunchLogs do
   alias Traceify.MyLogWorker
   alias Traceify.RedixPool, as: Redis
 
+  def ts_from_ids(ids) do
+    items = String.split(ids, "_")
+
+    [ timestamp | [_] ] = items
+
+    {res_convrt, _} = Integer.parse(timestamp)
+    {:ok, converted_date} = DateTime.from_unix(res_convrt)
+
+    converted_date
+  end
+
   def perform do
     t1 = DateTime.utc_now
 
@@ -16,7 +27,13 @@ defmodule Traceify.Task.CrunchLogs do
 
         {:ok, content} = Redis.command(["GET", key_to_find])
 
-        %{"sitename" => sitename, "content" => content, "level" => level, "key" => key_to_find}
+        %{
+          "sitename" => sitename,
+          "content" => content,
+          "level" => level,
+          "key" => key_to_find,
+          "ts" => DateTime.to_string(ts_from_ids(ids))
+        }
       end)
       # with pairs sitename -> content, build back a Map
       |> Enum.reduce(%{}, fn(element, acc) ->
@@ -25,6 +42,7 @@ defmodule Traceify.Task.CrunchLogs do
           Map.put(acc, element["sitename"], cur_logs ++ [element])
         end)
 
+    # create a task for each given sitename
     tasks = for sitename <- Map.keys(sitenames_logs) do
       try do
         service = Traceify.Services.get_service_by_site_name!(sitename)
@@ -37,7 +55,7 @@ defmodule Traceify.Task.CrunchLogs do
       end
     end
 
-    # wait for the results
+    # execute them in parallel - wait for the results
     Task.yield_many(Enum.filter(tasks, fn(t) -> t != nil end), 45000)
 
     t2 = DateTime.utc_now

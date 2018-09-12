@@ -24,11 +24,11 @@ defmodule Traceify.MyLogWorker do
     )
   end
 
-  defp insert_log(db, level, content) do
+  defp insert_log(db, level, content, timestamp) do
     Sqlitex.query!(
       db,
-      "INSERT INTO logs (level, content) VALUES ($1, $2)",
-      bind: [level, content]
+      "INSERT INTO logs (level, content, created_at) VALUES ($1, $2, $3)",
+      bind: [level, content, timestamp]
     )
   end
 
@@ -44,7 +44,7 @@ defmodule Traceify.MyLogWorker do
         remove_old_records(db, System.get_env("MAX_DAYS_RETENTION") || 31)
 
         Enum.each(logs, fn(log) ->
-          insert_log(db, log["level"], log["content"])
+          insert_log(db, log["level"], log["content"], log["ts"])
 
           remove_tmp_log(log["key"])
         end)
