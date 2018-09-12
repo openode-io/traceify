@@ -41,7 +41,8 @@ defmodule Traceify.MyLogWorker do
 
     Sqlitex.with_db(Traceify.Services.db_path(service), fn(db) ->
       try do
-        remove_old_records(db, System.get_env("MAX_DAYS_RETENTION") || 31)
+        # TODO: fix
+        # remove_old_records(db, System.get_env("MAX_DAYS_RETENTION") || 31)
 
         Enum.each(logs, fn(log) ->
           insert_log(db, log["level"], log["content"], log["ts"])
@@ -49,7 +50,7 @@ defmodule Traceify.MyLogWorker do
           remove_tmp_log(log["key"])
         end)
       rescue
-        e in _ -> Logger.error("could not perform log properly")
+        e in _ -> IO.inspect e #Logger.error("could not perform log properly")
       end
     end)
 
