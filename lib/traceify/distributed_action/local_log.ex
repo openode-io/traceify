@@ -19,8 +19,8 @@ defmodule Traceify.MyLogWorker do
   defp remove_old_records(db, max_days_retentions) do
     Sqlitex.query!(
       db,
-      "DELETE FROM logs WHERE created_at < datetime('now', '-$1 days')",
-      bind: [max_days_retentions]
+      "DELETE FROM logs WHERE created_at < datetime('now', '-#{max_days_retentions} days')",
+      bind: []
     )
   end
 
@@ -42,7 +42,7 @@ defmodule Traceify.MyLogWorker do
     Sqlitex.with_db(Traceify.Services.db_path(service), fn(db) ->
       try do
         # TODO: fix
-        # remove_old_records(db, System.get_env("MAX_DAYS_RETENTION") || 31)
+        remove_old_records(db, System.get_env("MAX_DAYS_RETENTION") || 31)
 
         Enum.each(logs, fn(log) ->
           insert_log(db, log["level"], log["content"], log["ts"])
