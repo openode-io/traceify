@@ -20,12 +20,13 @@ defmodule TraceifyWeb.Admin.ServiceController do
 
       service = conn.body_params
 
-      if ! service["storage_area_id"] do
-        storage_area = Traceify.StorageAreas.first_storage_areas
+      service = cond do
+        ! service["storage_area_id"] -> Logger.info("2")
+		storage_area = Traceify.StorageAreas.first_storage_areas
+		Logger.info("defaulting to storage area #{storage_area.name}")
 
-        Logger.info("defaulting to storage area #{storage_area.name}")
-
-        service = Map.put(service, "storage_area_id", storage_area.id)
+		Map.put(service, "storage_area_id", storage_area.id)
+	true -> conn.body_params
       end
 
       {:ok, service} = Traceify.Services.create_service service
