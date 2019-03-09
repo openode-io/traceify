@@ -1,10 +1,30 @@
-FROM bitwalker/alpine-elixir-phoenix:latest
+FROM elixir:1.8-alpine
 
-# Set exposed ports
-EXPOSE 5000
-ENV PORT=5000 MIX_ENV=prod
+ARG homedir="/opt/app"
+WORKDIR $homedir
 
-# main build and run script
-ADD build-and-run.sh ./
+ENV PORT=80
+ENV MIX_ENV=dev
 
-CMD ["mix", "phx.server"]
+RUN echo 'set -e' > /boot.sh # this is the script which will run on boot
+
+RUN apk add nodejs npm make gcc erlang-dev libc-dev
+
+# Daemon for cron jobs (optional)
+# RUN echo 'echo will install crond...' >> /boot.sh
+# RUN echo 'crond' >> /boot.sh
+# RUN echo 'crontab .openode.cron' >> /boot.sh
+
+# Main installation
+RUN echo 'pwd ; ls -la' >> /boot.sh
+RUN echo 'yes | mix local.hex' >> /boot.sh
+RUN echo 'yes | mix local.rebar' >> /boot.sh
+RUN echo 'pwd ; ls -la' >> /boot.sh
+RUN echo 'mix deps.get' >> /boot.sh
+RUN echo 'cd assets && npm install && npm run deploy' >> /boot.sh
+RUN echo "cd $homedir" >> /boot.sh
+RUN echo "mix ecto.create" >> /boot.sh
+RUN echo "mix ecto.migrate" >> /boot.sh
+
+# start it!
+CMD sh /boot.sh && mix phx.server

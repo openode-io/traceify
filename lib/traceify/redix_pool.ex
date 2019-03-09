@@ -1,7 +1,7 @@
 defmodule Traceify.RedixPool do
   use Supervisor
 
-  @redis_connection_params host: "localhost"
+  @redis_connection_params host: System.get_env("REDIS_HOST") || "localhost"
 
   def start_link do
     Supervisor.start_link(__MODULE__, [])

@@ -30,3 +30,5 @@ npm-debug.log
 .without.docker.env
 /logs
 /tmp
+
+.openode

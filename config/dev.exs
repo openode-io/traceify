@@ -56,11 +56,4 @@ config :logger, :console, format: "[$level] $message\n"
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
 
-# Configure your database
-config :traceify, Traceify.Repo,
-  adapter: Ecto.Adapters.MySQL,
-  username: System.get_env("DB_USER"),
-  password: System.get_env("DB_PASSWORD"),
-  database: "traceify_dev",
-  hostname: System.get_env("DB_HOST"),
-  pool_size: 10
+import_config "dev.secret.exs"
