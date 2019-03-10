@@ -20,6 +20,10 @@ config :traceify, Traceify.Scheduler,
     {"* * * * *", fn -> Traceify.Task.CrunchLogs.perform end}
   ]
 
+config :logger, :debug,
+ path: "/var/log/traceify/all.log",
+ level: :debug
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

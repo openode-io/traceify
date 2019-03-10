@@ -120,7 +120,7 @@ defmodule Traceify.Services do
 
   def init_db(service) do
     ctbl = """
-      CREATE TABLE IF NOT EXISTS logs (
+      CREATE VIRTUAL TABLE IF NOT EXISTS logs USING fts3(
         id integer PRIMARY KEY AUTOINCREMENT,
         level VARCHAR(15) NOT NULL,
         content TEXT,
@@ -134,8 +134,8 @@ defmodule Traceify.Services do
 
       Sqlitex.query(db, ctbl)
 
-      Sqlitex.query(db, "CREATE INDEX level_ind ON logs(level)")
-      Sqlitex.query(db, "CREATE INDEX content_ind ON logs(content)")
+      #Sqlitex.query(db, "CREATE INDEX level_ind ON logs(level)")
+      #Sqlitex.query(db, "CREATE INDEX content_ind ON logs(content)")
     end)
   end
 

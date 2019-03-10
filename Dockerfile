@@ -16,10 +16,8 @@ RUN apk add nodejs npm make gcc erlang-dev libc-dev
 # RUN echo 'crontab .openode.cron' >> /boot.sh
 
 # Main installation
-RUN echo 'pwd ; ls -la' >> /boot.sh
 RUN echo 'yes | mix local.hex' >> /boot.sh
 RUN echo 'yes | mix local.rebar' >> /boot.sh
-RUN echo 'pwd ; ls -la' >> /boot.sh
 RUN echo 'mix deps.get' >> /boot.sh
 RUN echo 'cd assets && npm install && npm run deploy' >> /boot.sh
 RUN echo "cd $homedir" >> /boot.sh

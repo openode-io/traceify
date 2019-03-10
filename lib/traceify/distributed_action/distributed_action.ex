@@ -7,7 +7,7 @@ defmodule Traceify.DistributedAction do
   def action(conn, action, sitename, levels, content) do
     url = "#{Atom.to_string(conn.scheme)}://#{conn.host}:#{conn.port}"
     Logger.info("Distributed action on #{url}")
-    
+
     service = Traceify.Services.get_service_by_site_name!(sitename)
 
     unless ActionUtil.token_valid?(conn, service.user.token) do

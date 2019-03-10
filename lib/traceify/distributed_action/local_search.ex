@@ -4,11 +4,11 @@ defmodule Traceify.DistributedAction.LocalSearch do
     Sqlitex.with_db(db_path, fn(db) ->
       {:ok, results} = Sqlitex.query(db,
         "SELECT * FROM logs \
-        WHERE content LIKE ?1 #{opts["level_cond"]} AND \
+        WHERE content MATCH ?1 #{opts["level_cond"]} AND \
         created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch') \
         ORDER BY created_at DESC \
         LIMIT ?4 OFFSET ?5  ",
-        bind: ["%#{opts["search"]}%", opts["from"], opts["to"], opts["limit"], opts["offset"]]
+        bind: ["*#{opts["search"]}*", opts["from"], opts["to"], opts["limit"], opts["offset"]]
       )
 
       results
@@ -30,9 +30,9 @@ defmodule Traceify.DistributedAction.LocalSearch do
     Sqlitex.with_db(db_path, fn(db) ->
       {:ok, resCnt} = Sqlitex.query(db,
         "SELECT COUNT(*) as cnt FROM logs \
-        WHERE content LIKE ?1 #{opts["level_cond"]} AND \
+        WHERE content MATCH ?1 #{opts["level_cond"]} AND \
         created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch')",
-        bind: ["%#{opts["search"]}%", opts["from"], opts["to"]]
+        bind: ["*#{opts["search"]}*", opts["from"], opts["to"]]
       )
 
       (Enum.at(resCnt, 0))[:cnt]

@@ -7,6 +7,7 @@ defmodule TraceifyWeb.InstanceController do
   action_fallback TraceifyWeb.FallbackController
 
   def index(conn, _params) do
+    IO.puts "index heowll"
     render(conn, "index.json")
   end
 
@@ -21,6 +22,7 @@ defmodule TraceifyWeb.InstanceController do
 
   defp distributed_action(conn, action, sitename, levels) do
     try do
+      IO.puts "hi d"
       result = DistributedAction.action(conn, action, sitename, levels, conn.body_params)
 
       cond do
