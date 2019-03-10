@@ -2,14 +2,13 @@ defmodule Traceify.DistributedAction.LocalSearch do
 
   defp do_search_with_results(db_path, opts) do
     Sqlitex.with_db(db_path, fn(db) ->
-      {:ok, results} = Sqlitex.query(db,
-        "SELECT * FROM logs \
-        WHERE content MATCH ?1 #{opts["level_cond"]} AND \
-        created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch') \
-        ORDER BY created_at DESC \
-        LIMIT ?4 OFFSET ?5  ",
-        bind: ["*#{opts["search"]}*", opts["from"], opts["to"], opts["limit"], opts["offset"]]
-      )
+      query = "SELECT * FROM logs \
+      WHERE #{opts["search"]} #{opts["level_cond"]} AND \
+      created_at BETWEEN DATETIME(#{opts["from"]}, 'unixepoch') AND DATETIME(#{opts["to"]}, 'unixepoch') \
+      ORDER BY created_at DESC \
+      LIMIT #{opts["limit"]} OFFSET #{opts["offset"]}  "
+
+      {:ok, results} = Sqlitex.query(db, query, bind: [])
 
       results
     end)
@@ -26,13 +25,21 @@ defmodule Traceify.DistributedAction.LocalSearch do
     end
   end
 
+  defp gen_search_cond(search) do
+    case search do
+      "" -> " 1 = 1 "
+      nil -> " 1 = 1 "
+      _ -> " logs MATCH '*#{search}*' "
+    end
+  end
+
   defp calculate_total_nb_entries(db_path, opts) do
     Sqlitex.with_db(db_path, fn(db) ->
       {:ok, resCnt} = Sqlitex.query(db,
         "SELECT COUNT(*) as cnt FROM logs \
-        WHERE content MATCH ?1 #{opts["level_cond"]} AND \
+        WHERE ?1 #{opts["level_cond"]} AND \
         created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch')",
-        bind: ["*#{opts["search"]}*", opts["from"], opts["to"]]
+        bind: [opts["search"], opts["from"], opts["to"]]
       )
 
       (Enum.at(resCnt, 0))[:cnt]
@@ -45,6 +52,7 @@ defmodule Traceify.DistributedAction.LocalSearch do
     offset = page * limit
     from = content["from"] || (Timex.shift(DateTime.utc_now, days: -31) |> DateTime.to_unix)
     to = content["to"] || (DateTime.utc_now |> DateTime.to_unix)
+    search = gen_search_cond(content["search"])
 
     %{
       "limit" => limit,
@@ -52,7 +60,7 @@ defmodule Traceify.DistributedAction.LocalSearch do
       "offset" => offset,
       "from" => from,
       "to" => to,
-      "search" => content["search"],
+      "search" => search,
       "level_cond" => level_cond
     }
   end
@@ -66,6 +74,7 @@ defmodule Traceify.DistributedAction.LocalSearch do
   def exec_search(db_path, levels, content) do
     level_cond = gen_level_cond(levels)
     opts = prepare_options(content, level_cond)
+
     results = do_search_with_results(db_path, opts)
     total_nb_entries = calculate_total_nb_entries(db_path, opts)
     nb_pages = Kernel.trunc(Float.ceil(total_nb_entries / opts["limit"]))

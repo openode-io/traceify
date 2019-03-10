@@ -133,9 +133,7 @@ defmodule Traceify.Services do
       Sqlitex.query(db, "PRAGMA journal_mode=WAL;")
 
       Sqlitex.query(db, ctbl)
-
-      #Sqlitex.query(db, "CREATE INDEX level_ind ON logs(level)")
-      #Sqlitex.query(db, "CREATE INDEX content_ind ON logs(content)")
+      Sqlitex.query(db, ".tables;")
     end)
   end
 

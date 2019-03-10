@@ -21,18 +21,11 @@ config :logger, :error,
  path: "/var/log/traceify/error.log",
  level: :error
 
-config :exq,
- host: "127.0.0.1",
- port: 6379,
- namespace: "exq",
- concurrency: 1,
- queues: ["default"]
+#config :exq,
+# host: "127.0.0.1",
+# port: 6379,
+# namespace: "exq",
+# concurrency: 1,
+# queues: ["default"]
 
-# Configure your database
-config :traceify, Traceify.Repo,
-  adapter: Ecto.Adapters.MySQL,
-  username: System.get_env("DB_USER"),
-  password: System.get_env("DB_PASSWORD"),
-  database: "traceify_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+import_config "test.secret.exs"

@@ -13,6 +13,8 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => "coucou", "from" => 0}
         )
 
+      IO.puts "wathhhh result #{inspect result}"
+
       [first | [ second | [] ]] = result["results"]
 
       assert first[:id] == 2
@@ -109,7 +111,7 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         ["error", "debug"],
         %{"search" => "", "from" => 0}
         )
-        
+
       assert length(result["results"]) == 12
     end
   end
