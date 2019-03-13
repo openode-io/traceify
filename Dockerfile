@@ -3,7 +3,6 @@ FROM elixir:1.8-alpine
 ARG homedir="/opt/app"
 WORKDIR $homedir
 
-ENV PORT=80
 ENV MIX_ENV=prod
 
 RUN echo 'set -e' > /boot.sh # this is the script which will run on boot

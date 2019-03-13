@@ -15,9 +15,9 @@ use Mix.Config
 # which you typically run after static files are built.
 config :traceify, TraceifyWeb.Endpoint,
   load_from_system_env: true,
-  url: [host: "traceify.openode.io", port: 80],
+  url: [host: "traceify.openode.io", port: System.get_env("HTTP_PORT")],
   cache_static_manifest: "priv/static/cache_manifest.json"
-  
+
 config :traceify, Traceify.Scheduler,
   jobs: [
     # Every minute

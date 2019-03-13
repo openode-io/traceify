@@ -37,9 +37,9 @@ defmodule Traceify.DistributedAction.LocalSearch do
     Sqlitex.with_db(db_path, fn(db) ->
       {:ok, resCnt} = Sqlitex.query(db,
         "SELECT COUNT(*) as cnt FROM logs \
-        WHERE ?1 #{opts["level_cond"]} AND \
-        created_at BETWEEN DATETIME(?2, 'unixepoch') AND DATETIME(?3, 'unixepoch')",
-        bind: [opts["search"], opts["from"], opts["to"]]
+        WHERE #{opts["search"]} #{opts["level_cond"]} AND \
+        created_at BETWEEN DATETIME(?1, 'unixepoch') AND DATETIME(?2, 'unixepoch')",
+        bind: [opts["from"], opts["to"]]
       )
 
       (Enum.at(resCnt, 0))[:cnt]
