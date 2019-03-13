@@ -4,7 +4,7 @@ ARG homedir="/opt/app"
 WORKDIR $homedir
 
 ENV PORT=80
-ENV MIX_ENV=dev
+ENV MIX_ENV=prod
 
 RUN echo 'set -e' > /boot.sh # this is the script which will run on boot
 
