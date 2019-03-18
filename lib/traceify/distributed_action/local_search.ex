@@ -4,15 +4,14 @@ defmodule Traceify.DistributedAction.LocalSearch do
     Sqlitex.with_db(db_path, fn(db) ->
       query = "SELECT * FROM logs \
       WHERE #{opts["search"]} #{opts["level_cond"]} AND \
-      created_at BETWEEN DATETIME(#{opts["from"]}, 'unixepoch') AND DATETIME(#{opts["to"]}, 'unixepoch') \
+      created_at BETWEEN ?1 AND ?2 \
       ORDER BY created_at DESC \
       LIMIT #{opts["limit"]} OFFSET #{opts["offset"]}  "
 
-      {:ok, results} = Sqlitex.query(db, query, bind: [])
+      {:ok, results} = Sqlitex.query(db, query, bind: [opts["from"], opts["to"]])
 
       results
     end)
-
   end
 
   defp gen_level_cond(levels) do
@@ -38,7 +37,7 @@ defmodule Traceify.DistributedAction.LocalSearch do
       {:ok, resCnt} = Sqlitex.query(db,
         "SELECT COUNT(*) as cnt FROM logs \
         WHERE #{opts["search"]} #{opts["level_cond"]} AND \
-        created_at BETWEEN DATETIME(?1, 'unixepoch') AND DATETIME(?2, 'unixepoch')",
+        created_at BETWEEN ?1 AND ?2",
         bind: [opts["from"], opts["to"]]
       )
 
@@ -46,20 +45,44 @@ defmodule Traceify.DistributedAction.LocalSearch do
     end)
   end
 
+  defp stringify_datetime(d) do
+    time_part =
+      d
+      |> DateTime.truncate(:second)
+      |> DateTime.to_time
+      |> Time.to_iso8601
+
+    date_part =
+      d
+      |> DateTime.to_date
+      |> Date.to_iso8601
+
+    "#{date_part} #{time_part}"
+  end
+
   defp prepare_options(content, level_cond) do
     limit = content["per_page"] || 30
     page = content["page"] || 0
     offset = page * limit
-    from = content["from"] || (Timex.shift(DateTime.utc_now, days: -31) |> DateTime.to_unix)
-    to = content["to"] || (DateTime.utc_now |> DateTime.to_unix)
+    from = case content["from"] do
+       nil -> (Timex.shift(DateTime.utc_now, days: -31))
+       _ -> {:ok, res} = DateTime.from_unix(content["from"])
+        res
+    end
+
+    to = case content["to"] do
+      nil -> DateTime.utc_now
+      _ -> {:ok, res} = DateTime.from_unix(content["to"])
+    end
+
     search = gen_search_cond(content["search"])
 
     %{
       "limit" => limit,
       "page" => page,
       "offset" => offset,
-      "from" => from,
-      "to" => to,
+      "from" => stringify_datetime(from),
+      "to" => stringify_datetime(to),
       "search" => search,
       "level_cond" => level_cond
     }
