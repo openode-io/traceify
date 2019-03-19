@@ -64,15 +64,19 @@ defmodule Traceify.DistributedAction.LocalSearch do
     limit = content["per_page"] || 30
     page = content["page"] || 0
     offset = page * limit
+
     from = case content["from"] do
        nil -> (Timex.shift(DateTime.utc_now, days: -31))
-       _ -> {:ok, res} = DateTime.from_unix(content["from"])
+       _ ->
+        {:ok, res} = DateTime.from_unix(content["from"])
         res
     end
 
     to = case content["to"] do
       nil -> DateTime.utc_now
-      _ -> {:ok, res} = DateTime.from_unix(content["to"])
+      _ ->
+        {:ok, res} = DateTime.from_unix(content["to"])
+        res
     end
 
     search = gen_search_cond(content["search"])
