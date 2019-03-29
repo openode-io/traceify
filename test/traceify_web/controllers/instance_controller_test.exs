@@ -10,6 +10,26 @@ defmodule TraceifyWeb.InstanceControllerTest do
     end
   end
 
+  describe "GET /api/v1/instances/:sitename/stats" do
+    setup do
+      on_exit fn ->
+        File.rm_rf!("./tmp/dbs/hello_world")
+      end
+    end
+
+    test "stats of a small instance", %{conn: conn} do
+      conn_bak = conn
+
+      conn = post conn, "/api/v1/instances/hello_world/info/log", %{
+        hello2: "world2"
+      }
+
+      conn_bak = get conn_bak, "/api/v1/instances/hello_world/stats"
+      
+      assert String.contains?(conn.resp_body, "success")
+    end
+  end
+
   describe "POST /api/v1/instances/:sitename/:level/log and search" do
 
     setup do

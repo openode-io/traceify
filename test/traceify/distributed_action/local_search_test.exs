@@ -13,8 +13,6 @@ defmodule Traceify.DistributedAction.LocalSearchTest do
         %{"search" => "coucou", "from" => 0}
         )
 
-      IO.puts "wathhhh result #{inspect result}"
-
       [first | [ second | [] ]] = result["results"]
 
       assert first[:id] == 2

@@ -18,6 +18,12 @@ defmodule TraceifyWeb.InstanceView do
     }
   end
 
+  def render("stats.json", %{result: result}) do
+    %{
+      "size_in_mb": result["size_in_mb"]
+    }
+  end
+
   def render("log-entry.json", %{log: log}) do
     %{
       id: log[:id],

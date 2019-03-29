@@ -30,13 +30,13 @@ defmodule TraceifyWeb.Router do
     get "/version", HomeController, :version
   end
 
-  # Other scopes may use custom stacks.
   scope "/api/v1", TraceifyWeb do
     pipe_through :api
 
     scope "/instances"  do
       get "/", InstanceController, :index
 
+      get "/:sitename/stats", InstanceController, :stats
       post "/:sitename/:level/log", InstanceController, :log
       post "/:sitename/search", InstanceController, :search
 

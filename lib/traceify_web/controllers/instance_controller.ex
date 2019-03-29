@@ -18,9 +18,9 @@ defmodule TraceifyWeb.InstanceController do
     |> render(TraceifyWeb.ErrorView, "#{code}.json", %{msg: msg})
   end
 
-  defp distributed_action(conn, action, sitename, levels) do
+  defp distributed_action(conn, action, sitename, levels, params) do
     try do
-      result = DistributedAction.action(conn, action, sitename, levels, conn.body_params)
+      result = DistributedAction.action(conn, action, sitename, levels, params)
 
       cond do
         ! is_nil(result) -> render(conn, "#{action}.json", %{result: result})
@@ -35,13 +35,17 @@ defmodule TraceifyWeb.InstanceController do
   end
 
   def log(conn, %{"sitename" => sitename, "level" => level}) do
-    distributed_action(conn, "log", sitename, [level])
+    distributed_action(conn, "log", sitename, [level], conn.body_params)
   end
 
   def search(conn, %{"sitename" => sitename}) do
     levels = if conn.body_params["levels"], do: conn.body_params["levels"], else: []
 
-    distributed_action(conn, "search", sitename, levels)
+    distributed_action(conn, "search", sitename, levels, conn.body_params)
+  end
+
+  def stats(conn, %{"sitename" => sitename}) do
+    distributed_action(conn, "stats", sitename, [], %{})
   end
 
 end
